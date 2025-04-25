@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Silent Wire – Transcript-Code</title>
+  <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA" />
+  <style>
+    body { 
+      font-family: 'Courier New', monospace; 
+      background: #0d0d0d; 
+      color: #00ffcc; 
+      text-align: center; 
+      padding-top: 100px; 
+      animation: backgroundAnimation 10s infinite;
+    }
+    h2 { 
+      color: #00ffcc; 
+      text-shadow: 0 0 10px #ff00ff;
+      animation: text-glitch 1s infinite;
+    }
+    #download { 
+      display: none; 
+      margin-top: 20px; 
+    }
+    input[type="password"] { 
+      padding: 10px; 
+      font-size: 18px; 
+      background: #1a1a1a; 
+      border: 1px solid #00ffcc; 
+      color: #00ffcc; 
+      text-align: center;
+      animation: flicker 0.3s infinite;
+    }
+    button { 
+      padding: 10px 20px; 
+      font-size: 18px; 
+      background: #00ffcc; 
+      color: #0d0d0d; 
+      border: none; 
+      cursor: pointer; 
+      margin-left: 10px;
+      box-shadow: 0 0 10px #00ffcc;
+      animation: glitch 1s infinite;
+    }
+    button:disabled {
+      background: grey;
+      cursor: not-allowed;
+    }
+    button:hover {
+      background: #00e6b8;
+    }
+    a {
+      color: #00ffcc;
+      text-decoration: none;
+      font-size: 20px;
+      text-shadow: 0 0 5px #00ffcc;
+    }
+    #error {
+      color: red; 
+      margin-top:10px;
+    }
+    #loading { 
+      display: none; 
+      margin-top: 20px; 
+      font-size: 20px;
+    }
+    #fakeTerminal { 
+      display: none; 
+      margin-top: 20px; 
+      font-size: 18px;
+      color: #00ffcc;
+      white-space: pre-wrap;
+    }
+    #timer {
+      margin-top: 20px;
+      font-size: 20px;
+      color: #ff3333;
+    }
+    @keyframes text-glitch {
+      0% { text-shadow: 2px 2px 0px #ff00ff, -2px -2px 0px #00ffff; }
+      20% { text-shadow: -2px -2px 0px #ff00ff, 2px 2px 0px #00ffff; }
+      40% { text-shadow: 2px 2px 0px #ff00ff, -2px -2px 0px #00ffff; }
+      60% { text-shadow: -2px -2px 0px #ff00ff, 2px 2px 0px #00ffff; }
+      80% { text-shadow: 2px 2px 0px #ff00ff, -2px -2px 0px #00ffff; }
+      100% { text-shadow: none; }
+    }
+    @keyframes flicker {
+      0% { opacity: 1; }
+      50% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+    @keyframes glitch {
+      0% { text-shadow: 2px 2px #ff00ff, -2px -2px 0px #00ffff; }
+      100% { text-shadow: none; }
+    }
+    @keyframes backgroundAnimation {
+      0% { background-color: #0d0d0d; }
+      50% { background-color: #1a1a1a; }
+      100% { background-color: #0d0d0d; }
+    }
+    @keyframes fadeOut {
+      0% { opacity: 1; }
+      100% { opacity: 0.2; }
+    }
+  </style>
+</head>
+<body>
+  <h2 id="title">Du hast das Rätsel gelöst.<br>Gib den <strong>Transcript-Code</strong> ein:</h2>
+  <input type="password" id="pw" placeholder="Transcript-Code" />
+  <button id="submitBtn" onclick="checkPassword()">Bestätigen</button>
+  <div id="error"></div>
+  <div id="timer">Verbleibende Zeit: 60 Sekunden</div>
+  <div id="download">
+    <h3>Signal erkannt! Deine Überraschung wartet:</h3>
+    <a href="ueberraschung.pdf" download>Überraschung herunterladen</a>
+  </div>
+  <div id="fakeTerminal"></div>
+
+  <script>
+    let attempts = 0;
+    let locked = false;
+    let countdownTimer = null;
+    let timerCountdown = 60;
+    let codeReceived = false;
+    const correctPassword = "staticwire"; // lowercase, no spaces
+
+    function normalizeInput(input) {
+      return input.toLowerCase().replace(/\s+/g, '');
+    }
+
+    function checkPassword() {
+      if (locked || codeReceived || timerCountdown <= 0) return;
+
+      const input = document.getElementById('pw').value;
+      const normalized = normalizeInput(input);
+
+      if (normalized === correctPassword) {
+        codeReceived = true;
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('download').style.display = 'block';
+        document.getElementById('error').innerText = '';
+        document.getElementById('title').innerText = "Verbindung erfolgreich!";
+        document.getElementById('fakeTerminal').style.display = 'none';
+      } else {
+        attempts++;
+        if (attempts >= 3) {
+          lockInput();
+        } else {
+          document.getElementById('error').innerText = 'Falscher Code! Versuch ' + attempts + ' von 3';
+        }
+        document.getElementById('download').style.display = 'none';
+        showFakeTerminal(input);
+      }
+    }
+
+    function lockInput() {
+      locked = true;
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      let countdown = 60;
+      document.getElementById('error').innerText = 'Zu viele Fehlversuche! Bitte warte 60 Sekunden...';
+
+      countdownTimer = setInterval(() => {
+        countdown--;
+        document.getElementById('error').innerText = 'Gesperrt! Bitte warte noch ' + countdown + ' Sekunden...';
+        if (countdown <= 0) {
+          clearInterval(countdownTimer);
+          locked = false;
+          attempts = 0;
+          btn.disabled = false;
+          document.getElementById('error').innerText = '';
+        }
+      }, 1000);
+    }
+
+    function showFakeTerminal(input) {
+      const terminal = document.getElementById('fakeTerminal');
+      terminal.style.display = 'block';
+      terminal.innerText = "Zugang verweigert: " + input;
+    }
+
+    function specialCode(input) {
+      const normalized = normalizeInput(input);
+      if (normalized === "falcon") {
+        alert("Du hast den geheimen Code gefunden! Lade die Bonus-Datei herunter.");
+        document.getElementById('download').innerHTML += '<br><a href="bonus.pdf" download>Bonus-Datei herunterladen</a>';
+      }
+    }
+
+    document.getElementById('pw').addEventListener('input', function() {
+      const input = this.value;
+      specialCode(input);
+    });
+
+    // Timer Countdown
+    function updateTimer() {
+      if (timerCountdown > 0) {
+        timerCountdown--;
+        document.getElementById('timer').innerText = `Verbleibende Zeit: ${timerCountdown} Sekunden`;
+      } else {
+        document.getElementById('timer').innerText = "Die Zeit ist abgelaufen!";
+        lockInput();
+      }
+    }
+
+    setInterval(updateTimer, 1000); // Update timer every second
+  </script>
+</body>
+</html>
