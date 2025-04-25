@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>Silent Wire – Transcript-Code</title>
+  <title>Silent Wire – Verbindung</title>
   <style>
     body { 
       font-family: 'Courier New', monospace; 
@@ -11,13 +11,23 @@
       text-align: center; 
       padding-top: 100px; 
     }
-    h2 { 
-      color: #00ffcc; 
-      text-shadow: 0 0 10px #ff00ff;
+    #terminalText {
+      white-space: pre-wrap;
+      font-size: 18px;
     }
-    #download { 
-      display: none; 
-      margin-top: 20px; 
+    #startButton {
+      display: none;
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background: #00ffcc;
+      color: #0d0d0d;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 0 10px #00ffcc;
+    }
+    #mainContent {
+      display: none;
     }
     input[type="password"] { 
       padding: 10px; 
@@ -26,6 +36,7 @@
       border: 1px solid #00ffcc; 
       color: #00ffcc; 
       text-align: center;
+      caret-color: #00ffcc;
     }
     button { 
       padding: 10px 20px; 
@@ -37,22 +48,27 @@
       margin-left: 10px;
       box-shadow: 0 0 10px #00ffcc;
     }
-    button:disabled {
-      background: grey;
-      cursor: not-allowed;
-    }
-    button:hover {
-      background: #00e6b8;
-    }
-    a {
-      color: #00ffcc;
-      text-decoration: none;
-      font-size: 20px;
+    #datestamp {
+      margin: 20px 0;
+      font-size: 16px;
       text-shadow: 0 0 5px #00ffcc;
+    }
+    #disconnect {
+      position: absolute;
+      bottom: 10px;
+      left: 20px;
+      font-size: 14px;
+      cursor: pointer;
+      color: #00ffcc;
+      text-decoration: underline;
     }
     #error {
       color: red; 
       margin-top:10px;
+    }
+    #download {
+      display: none; 
+      margin-top: 20px; 
     }
     #fakeTerminal { 
       display: none; 
@@ -64,22 +80,56 @@
   </style>
 </head>
 <body>
-  <h2 id="title">Du hast das Rätsel gelöst.<br>Gib den <strong>Transcript-Code</strong> ein:</h2>
-  <input type="password" id="pw" placeholder="Transcript-Code" />
-  <button id="submitBtn" onclick="checkPassword()">Bestätigen</button>
-  <div id="error"></div>
-  <div id="download">
-    <h3>Signal erkannt! Deine Überraschung wartet:</h3>
-    <a href="ueberraschung.pdf" download>Überraschung herunterladen</a>
+  <div id="intro">
+    <div id="terminalText"></div>
+    <button id="startButton" onclick="showMain()">Verbindung aufbauen</button>
   </div>
-  <div id="fakeTerminal"></div>
+
+  <div id="mainContent">
+    <h2>Signal stabilisiert – Autorisierung erforderlich</h2>
+    <div id="datestamp">Falcon Hollow, Oregon – Sommer 1984</div>
+    <input type="password" id="pw" placeholder="Transcript-Code" />
+    <button id="submitBtn" onclick="checkPassword()">Bestätigen</button>
+    <div id="error"></div>
+    <div id="download">
+      <h3>Übertragung abgeschlossen. Das Signal gehört jetzt dir.</h3>
+      <a href="ueberraschung.pdf" download>Überraschung herunterladen</a>
+    </div>
+    <div id="fakeTerminal"></div>
+    <div id="disconnect" onclick="restart()">Verbindung trennen</div>
+  </div>
 
   <script>
+    const lines = [
+      "Signal entdeckt...",
+      "Verbinde mit Falcon Hollow [1984]"
+    ];
+    let index = 0;
+
+    function typeLine() {
+      if (index < lines.length) {
+        document.getElementById('terminalText').innerText += lines[index] + "\n";
+        index++;
+        setTimeout(typeLine, 1000);
+      } else {
+        document.getElementById('startButton').style.display = 'inline-block';
+      }
+    }
+
+    function showMain() {
+      document.getElementById('intro').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+    }
+
+    function restart() {
+      location.reload();
+    }
+
     let attempts = 0;
     let locked = false;
     let countdownTimer = null;
     let codeReceived = false;
-    const correctPassword = "staticwire"; // lowercase, no spaces
+    const correctPassword = "staticwire";
 
     function normalizeInput(input) {
       return input.toLowerCase().replace(/\s+/g, '');
@@ -95,7 +145,6 @@
         codeReceived = true;
         document.getElementById('download').style.display = 'block';
         document.getElementById('error').innerText = '';
-        document.getElementById('title').innerText = "Verbindung erfolgreich!";
         document.getElementById('fakeTerminal').style.display = 'none';
       } else {
         attempts++;
@@ -135,18 +184,7 @@
       terminal.innerText = "Zugang verweigert: " + input;
     }
 
-    function specialCode(input) {
-      const normalized = normalizeInput(input);
-      if (normalized === "falcon") {
-        alert("Du hast den geheimen Code gefunden! Lade die Bonus-Datei herunter.");
-        document.getElementById('download').innerHTML += '<br><a href="bonus.pdf" download>Bonus-Datei herunterladen</a>';
-      }
-    }
-
-    document.getElementById('pw').addEventListener('input', function() {
-      const input = this.value;
-      specialCode(input);
-    });
+    document.addEventListener('DOMContentLoaded', typeLine);
   </script>
 </body>
 </html>
