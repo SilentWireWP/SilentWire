@@ -4,187 +4,107 @@
   <meta charset="UTF-8" />
   <title>Silent Wire – Verbindung</title>
   <style>
-    body { 
-      font-family: 'Courier New', monospace; 
-      background: #0d0d0d; 
-      color: #00ffcc; 
-      text-align: center; 
-      padding-top: 100px; 
-    }
-    #terminalText {
-      white-space: pre-wrap;
-      font-size: 18px;
-    }
-    #startButton {
-      display: none;
-      margin-top: 30px;
-      padding: 10px 20px;
-      font-size: 18px;
-      background: #00ffcc;
-      color: #0d0d0d;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 0 10px #00ffcc;
-    }
-    #mainContent {
-      display: none;
-    }
-    input[type="password"] { 
-      padding: 10px; 
-      font-size: 18px; 
-      background: #1a1a1a; 
-      border: 1px solid #00ffcc; 
-      color: #00ffcc; 
-      text-align: center;
-      caret-color: #00ffcc;
-    }
-    button { 
-      padding: 10px 20px; 
-      font-size: 18px; 
-      background: #00ffcc; 
-      color: #0d0d0d; 
-      border: none; 
-      cursor: pointer; 
-      margin-left: 10px;
-      box-shadow: 0 0 10px #00ffcc;
-    }
-    #datestamp {
-      margin: 20px 0;
-      font-size: 16px;
-      text-shadow: 0 0 5px #00ffcc;
-    }
-    #disconnect {
-      position: absolute;
-      bottom: 10px;
-      left: 20px;
-      font-size: 14px;
-      cursor: pointer;
-      color: #00ffcc;
-      text-decoration: underline;
-    }
-    #error {
-      color: red; 
-      margin-top:10px;
-    }
-    #download {
-      display: none; 
-      margin-top: 20px; 
-    }
-    #fakeTerminal { 
-      display: none; 
-      margin-top: 20px; 
-      font-size: 18px;
-      color: #00ffcc;
-      white-space: pre-wrap;
-    }
+    body { font-family: 'Courier New', monospace; background: #0d0d0d; color: #00ffcc; text-align: center; padding-top: 100px; }
+    #terminalText { white-space: pre-wrap; font-size: 18px; }
+    #startButton { display: none; margin-top: 30px; padding: 10px 20px; font-size: 18px; background: #00ffcc; color: #0d0d0d; border: none; cursor: pointer; box-shadow: 0 0 10px #00ffcc; }
+    #mainContent { display: none; }
+    input[type="password"] { padding: 10px; font-size: 18px; background: #1a1a1a; border: 1px solid #00ffcc; color: #00ffcc; text-align: center; caret-color: #00ffcc; }
+    #authProcess { display: none; margin-top: 20px; font-size: 18px; }
+    button { padding: 10px 20px; font-size: 18px; background: #00ffcc; color: #0d0d0d; border: none; cursor: pointer; margin-left: 10px; box-shadow: 0 0 10px #00ffcc; }
+    #datestamp { margin: 20px 0; font-size: 16px; text-shadow: 0 0 5px #00ffcc; }
+    #disconnect { position: absolute; bottom: 10px; left: 20px; font-size: 14px; cursor: pointer; color: #00ffcc; text-decoration: underline; }
+    #error { color: red; margin-top:10px; }
+    #download { display: none; margin-top: 20px; }
+    #fakeTerminal { display: none; margin-top: 20px; font-size: 18px; color: #00ffcc; white-space: pre-wrap; }
   </style>
 </head>
 <body>
-  <div id="intro">
-    <div id="terminalText"></div>
-    <button id="startButton" onclick="showMain()">Verbindung aufbauen</button>
-  </div>
-
+  <div id="intro"><div id="terminalText"></div><button id="startButton" onclick="showMain()">Verbindung aufbauen</button></div>
   <div id="mainContent">
     <h2>Signal stabilisiert – Autorisierung erforderlich</h2>
     <div id="datestamp">Falcon Hollow, Oregon – Sommer 1984</div>
-    <input type="password" id="pw" placeholder="Transcript-Code" />
-    <button id="submitBtn" onclick="checkPassword()">Bestätigen</button>
+    <div id="authArea"><input type="password" id="pw" placeholder="Transcript-Code" /><button id="submitBtn" onclick="checkPassword()">Bestätigen</button></div>
     <div id="error"></div>
-    <div id="download">
-      <h3>Übertragung abgeschlossen. Das Signal gehört jetzt dir.</h3>
-      <a href="ueberraschung.pdf" download>Überraschung herunterladen</a>
-    </div>
+    <div id="authProcess">Autorisierung wird durchgeführt<span id="dots"></span></div>
+    <div id="download"><h3>Autorisierung erfolgreich abgeschlossen.</h3><p>>> Übertragung gestartet...</p><a href="ueberraschung.pdf" download>Klicke hier, falls der Download nicht automatisch startet.</a></div>
     <div id="fakeTerminal"></div>
     <div id="disconnect" onclick="restart()">Verbindung trennen</div>
   </div>
-
-  <script>
-    const lines = [
-      "Signal entdeckt...",
-      "Verbinde mit Falcon Hollow [1984]"
-    ];
-    let index = 0;
-
-    function typeLine() {
-      if (index < lines.length) {
-        document.getElementById('terminalText').innerText += lines[index] + "\n";
-        index++;
-        setTimeout(typeLine, 1000);
-      } else {
-        document.getElementById('startButton').style.display = 'inline-block';
-      }
+<script>
+const lines = ["Signal entdeckt...","Verbinde mit Falcon Hollow [1984]"];
+let index = 0;
+function typeLine() {
+  if (index < lines.length) {
+    document.getElementById('terminalText').innerText += lines[index] + "\n";
+    index++; setTimeout(typeLine, 1000);
+  } else { document.getElementById('startButton').style.display = 'inline-block'; }
+}
+function showMain() { document.getElementById('intro').style.display = 'none'; document.getElementById('mainContent').style.display = 'block'; }
+function restart() { location.reload(); }
+let attempts = 0; let locked = false; let countdownTimer = null; let codeReceived = false;
+const correctPassword = "staticwire";
+function normalizeInput(input) { return input.toLowerCase().replace(/\s+/g, ''); }
+function checkPassword() {
+  if (locked || codeReceived) return;
+  const input = document.getElementById('pw').value;
+  const normalized = normalizeInput(input);
+  if (normalized === correctPassword) { startAuthProcess(); }
+  else {
+    attempts++;
+    if (attempts >= 3) { lockInput(); }
+    else { document.getElementById('error').innerText = 'Falscher Code! Versuch ' + attempts + ' von 3'; }
+    document.getElementById('download').style.display = 'none';
+    showFakeTerminal(input);
+  }
+}
+function startAuthProcess() {
+  codeReceived = true;
+  document.getElementById('authArea').style.display = 'none';
+  document.getElementById('error').innerText = '';
+  document.getElementById('fakeTerminal').style.display = 'none';
+  document.getElementById('authProcess').style.display = 'block';
+  animateDots();
+  setTimeout(finishAuth, 5000);
+}
+function animateDots() {
+  let dotCount = 0;
+  const dots = document.getElementById('dots');
+  const interval = setInterval(() => {
+    dotCount = (dotCount + 1) % 4;
+    dots.innerText = '.'.repeat(dotCount);
+    if (!document.getElementById('authProcess').style.display) clearInterval(interval);
+  }, 500);
+}
+function finishAuth() {
+  document.getElementById('authProcess').style.display = 'none';
+  document.getElementById('download').style.display = 'block';
+  const link = document.createElement('a');
+  link.href = 'ueberraschung.pdf';
+  link.download = '';
+  link.click();
+}
+function lockInput() {
+  locked = true;
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  let countdown = 60;
+  document.getElementById('error').innerText = 'Zu viele Fehlversuche! Bitte warte 60 Sekunden...';
+  countdownTimer = setInterval(() => {
+    countdown--;
+    document.getElementById('error').innerText = 'Gesperrt! Bitte warte noch ' + countdown + ' Sekunden...';
+    if (countdown <= 0) {
+      clearInterval(countdownTimer);
+      locked = false;
+      attempts = 0;
+      btn.disabled = false;
+      document.getElementById('error').innerText = '';
     }
-
-    function showMain() {
-      document.getElementById('intro').style.display = 'none';
-      document.getElementById('mainContent').style.display = 'block';
-    }
-
-    function restart() {
-      location.reload();
-    }
-
-    let attempts = 0;
-    let locked = false;
-    let countdownTimer = null;
-    let codeReceived = false;
-    const correctPassword = "staticwire";
-
-    function normalizeInput(input) {
-      return input.toLowerCase().replace(/\s+/g, '');
-    }
-
-    function checkPassword() {
-      if (locked || codeReceived) return;
-
-      const input = document.getElementById('pw').value;
-      const normalized = normalizeInput(input);
-
-      if (normalized === correctPassword) {
-        codeReceived = true;
-        document.getElementById('download').style.display = 'block';
-        document.getElementById('error').innerText = '';
-        document.getElementById('fakeTerminal').style.display = 'none';
-      } else {
-        attempts++;
-        if (attempts >= 3) {
-          lockInput();
-        } else {
-          document.getElementById('error').innerText = 'Falscher Code! Versuch ' + attempts + ' von 3';
-        }
-        document.getElementById('download').style.display = 'none';
-        showFakeTerminal(input);
-      }
-    }
-
-    function lockInput() {
-      locked = true;
-      const btn = document.getElementById('submitBtn');
-      btn.disabled = true;
-      let countdown = 60;
-      document.getElementById('error').innerText = 'Zu viele Fehlversuche! Bitte warte 60 Sekunden...';
-
-      countdownTimer = setInterval(() => {
-        countdown--;
-        document.getElementById('error').innerText = 'Gesperrt! Bitte warte noch ' + countdown + ' Sekunden...';
-        if (countdown <= 0) {
-          clearInterval(countdownTimer);
-          locked = false;
-          attempts = 0;
-          btn.disabled = false;
-          document.getElementById('error').innerText = '';
-        }
-      }, 1000);
-    }
-
-    function showFakeTerminal(input) {
-      const terminal = document.getElementById('fakeTerminal');
-      terminal.style.display = 'block';
-      terminal.innerText = "Zugang verweigert: " + input;
-    }
-
-    document.addEventListener('DOMContentLoaded', typeLine);
-  </script>
-</body>
-</html>
+  }, 1000);
+}
+function showFakeTerminal(input) {
+  const terminal = document.getElementById('fakeTerminal');
+  terminal.style.display = 'block';
+  terminal.innerText = "Zugang verweigert: " + input;
+}
+document.addEventListener('DOMContentLoaded', typeLine);
+</script></body></html>
