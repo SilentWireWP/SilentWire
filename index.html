@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <title>Silent Wire – Transcript-Code</title>
-  <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA" />
   <style>
     body { 
       font-family: 'Courier New', monospace; 
@@ -11,12 +10,10 @@
       color: #00ffcc; 
       text-align: center; 
       padding-top: 100px; 
-      animation: backgroundAnimation 10s infinite;
     }
     h2 { 
       color: #00ffcc; 
       text-shadow: 0 0 10px #ff00ff;
-      animation: text-glitch 1s infinite;
     }
     #download { 
       display: none; 
@@ -29,7 +26,6 @@
       border: 1px solid #00ffcc; 
       color: #00ffcc; 
       text-align: center;
-      animation: flicker 0.3s infinite;
     }
     button { 
       padding: 10px 20px; 
@@ -40,7 +36,6 @@
       cursor: pointer; 
       margin-left: 10px;
       box-shadow: 0 0 10px #00ffcc;
-      animation: glitch 1s infinite;
     }
     button:disabled {
       background: grey;
@@ -59,48 +54,12 @@
       color: red; 
       margin-top:10px;
     }
-    #loading { 
-      display: none; 
-      margin-top: 20px; 
-      font-size: 20px;
-    }
     #fakeTerminal { 
       display: none; 
       margin-top: 20px; 
       font-size: 18px;
       color: #00ffcc;
       white-space: pre-wrap;
-    }
-    #timer {
-      margin-top: 20px;
-      font-size: 20px;
-      color: #ff3333;
-    }
-    @keyframes text-glitch {
-      0% { text-shadow: 2px 2px 0px #ff00ff, -2px -2px 0px #00ffff; }
-      20% { text-shadow: -2px -2px 0px #ff00ff, 2px 2px 0px #00ffff; }
-      40% { text-shadow: 2px 2px 0px #ff00ff, -2px -2px 0px #00ffff; }
-      60% { text-shadow: -2px -2px 0px #ff00ff, 2px 2px 0px #00ffff; }
-      80% { text-shadow: 2px 2px 0px #ff00ff, -2px -2px 0px #00ffff; }
-      100% { text-shadow: none; }
-    }
-    @keyframes flicker {
-      0% { opacity: 1; }
-      50% { opacity: 0.3; }
-      100% { opacity: 1; }
-    }
-    @keyframes glitch {
-      0% { text-shadow: 2px 2px #ff00ff, -2px -2px 0px #00ffff; }
-      100% { text-shadow: none; }
-    }
-    @keyframes backgroundAnimation {
-      0% { background-color: #0d0d0d; }
-      50% { background-color: #1a1a1a; }
-      100% { background-color: #0d0d0d; }
-    }
-    @keyframes fadeOut {
-      0% { opacity: 1; }
-      100% { opacity: 0.2; }
     }
   </style>
 </head>
@@ -109,7 +68,6 @@
   <input type="password" id="pw" placeholder="Transcript-Code" />
   <button id="submitBtn" onclick="checkPassword()">Bestätigen</button>
   <div id="error"></div>
-  <div id="timer">Verbleibende Zeit: 60 Sekunden</div>
   <div id="download">
     <h3>Signal erkannt! Deine Überraschung wartet:</h3>
     <a href="ueberraschung.pdf" download>Überraschung herunterladen</a>
@@ -120,7 +78,6 @@
     let attempts = 0;
     let locked = false;
     let countdownTimer = null;
-    let timerCountdown = 60;
     let codeReceived = false;
     const correctPassword = "staticwire"; // lowercase, no spaces
 
@@ -129,14 +86,13 @@
     }
 
     function checkPassword() {
-      if (locked || codeReceived || timerCountdown <= 0) return;
+      if (locked || codeReceived) return;
 
       const input = document.getElementById('pw').value;
       const normalized = normalizeInput(input);
 
       if (normalized === correctPassword) {
         codeReceived = true;
-        document.getElementById('loading').style.display = 'none';
         document.getElementById('download').style.display = 'block';
         document.getElementById('error').innerText = '';
         document.getElementById('title').innerText = "Verbindung erfolgreich!";
@@ -191,19 +147,6 @@
       const input = this.value;
       specialCode(input);
     });
-
-    // Timer Countdown
-    function updateTimer() {
-      if (timerCountdown > 0) {
-        timerCountdown--;
-        document.getElementById('timer').innerText = `Verbleibende Zeit: ${timerCountdown} Sekunden`;
-      } else {
-        document.getElementById('timer').innerText = "Die Zeit ist abgelaufen!";
-        lockInput();
-      }
-    }
-
-    setInterval(updateTimer, 1000); // Update timer every second
   </script>
 </body>
 </html>
