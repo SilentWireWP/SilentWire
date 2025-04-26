@@ -47,12 +47,30 @@ body, html {
 
 </head>
 <body>
+    
+    <!-- Landing Load -->
+    <audio id="loadBeep" preload="auto"><source src="load-beep.wav" type="audio/wav"></audio>
+    <!-- Hover Blip -->
+    <audio id="hoverBlip" preload="auto"><source src="hover-blip.wav" type="audio/wav"></audio>
+    <!-- Click Confirm -->
+    <audio id="clickConfirm" preload="auto"><source src="click-confirm.wav" type="audio/wav"></audio>
+    <!-- Error Buzz -->
+    <audio id="errorBuzz" preload="auto"><source src="error-buzz.wav" type="audio/wav"></audio>
+    <!-- Background Static Loop -->
+    <audio id="backgroundStatic" preload="auto" loop><source src="background-static-loop.wav" type="audio/wav"></audio>
+
+    <audio id="nesAudio" src="nes.mp3" preload="auto"></audio>
+
 <div id="startPage">
     <h1>TRANSMISSION ACTIVE</h1>
     <p>DIE FREQUENZ VERRÄT DIR MEHR...</p>
     <p>ENTSCHLÜSSE DAS SIGNAL.<br>DAS RAUSCHEN ENDET NIE.</p>
     <a class="button" href="transmission_key.pdf" download>DOWNLOAD TRANSMISSION KEY</a><br>
     <span class="button" onclick="showTerminal()">RÄTSEL GELÖST? KLICKE HIER</span>
+    <span class="button blink" onclick="window.open('https://amzn.to/3GH4BVG', '_blank')">
+        ➤ SILENT WIRE – DAS BUCH LESEN
+    </span>
+
 </div>
 
 <div id="terminalView" class="hidden">
@@ -61,7 +79,7 @@ body, html {
         <button id="startBtn" class="hidden">Verbindung aufbauen</button>
         <div id="mainView" class="hidden">
             <h2>Signal stabilisiert – Autorisierung erforderlich</h2>
-            <p id="date">Falcon Hollow, Oregon – 25.4.1984</p>
+            <p id="date">Falcon Hollow, Oregon – 00.00.1984</p>
             <input type="text" id="codeInput" placeholder="Transcript-Code eingeben">
             <button id="submitBtn">Code prüfen</button>
             <p id="feedback"></p>
@@ -82,6 +100,13 @@ function showTerminal(){
 const correctHash = "cfecd29ed57951322dbbdb26f942bcdf5d8387b65f10acc01c96315c05c960b0";
 let inactivityTimer;
 function initTerminal(){
+    // Dynamisches Datum setzen (Tag & Monat aktuell, Jahr fix 1984)
+    const dateElem = document.getElementById('date');
+    const now      = new Date();
+    const dd       = String(now.getDate()).padStart(2,'0');
+    const mm       = String(now.getMonth()+1).padStart(2,'0');
+    dateElem.textContent = `Falcon Hollow, Oregon – ${dd}.${mm}.1984`;
+
     const terminal = document.getElementById('terminalView');
     const intro = document.getElementById('intro');
     const startBtn = document.getElementById('startBtn');
@@ -119,9 +144,18 @@ function initTerminal(){
     submitBtn.onclick = ()=>{
         resetInactivityTimer();
         let val = document.getElementById('codeInput').value.toLowerCase().replace(/\s+/g, '');
+
+        // Easter Egg: Never Ending Story
+        if (val === '6,62607004' || val === '6.62607004') {
+            feedback.textContent = `🎶 Never Ending Story 🎶
+Turn around... Look at what you see... In her face... The mirror of your dreams...`;
+            document.getElementById('nesAudio').play();
+            return;
+        }
         if(val === "override"){
             feedback.textContent = ">>> System-Override erkannt. Zugang verweigert. Nicht autorisierte Anfrage protokolliert.";
             terminal.classList.add('glitch');
+            playError();
             setTimeout(()=>{ terminal.classList.remove('glitch'); }, 300);
             return;
         }
@@ -143,11 +177,42 @@ function initTerminal(){
                 const errors=["FEHLER 84-404: Signal konnte nicht entschlüsselt werden.","WARNUNG: Unbekannter Code. Verbindung instabil.",">>> Frequenzabweichung erkannt. Zugriff verweigert."];
                 feedback.textContent=errors[Math.floor(Math.random()*errors.length)];
                 terminal.classList.add('glitch');
+            playError();
                 setTimeout(()=>{ terminal.classList.remove('glitch'); }, 300);
             }
         });
     };
 }
+
+    // Landing Load Sound
+    window.addEventListener('load', () => {
+      document.getElementById('loadBeep').play();
+      // start background static loop quietly
+      const bg = document.getElementById('backgroundStatic');
+      bg.volume = 0.2;
+      bg.play();
+    });
+
+    // Button Hover Sound
+    document.querySelectorAll('button, .button').forEach(btn => {
+      btn.addEventListener('mouseenter', () => {
+        document.getElementById('hoverBlip').play();
+      });
+      btn.addEventListener('click', () => {
+        document.getElementById('clickConfirm').play();
+      });
+    });
+
+    // Error Buzz function
+    function playError() {
+      const err = document.getElementById('errorBuzz');
+      err.currentTime = 0;
+      err.play();
+    }
+    // Call playError() where glitches occur
+    // Modify glitch sections:
+    // Replace instances of terminal.classList.add('glitch');
+
 </script>
 </body>
 </html>
