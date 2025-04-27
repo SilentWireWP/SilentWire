@@ -43,6 +43,42 @@ body, html {
     75% { transform: translate(-2px, -2px); }
     100% { transform: translate(0, 0); }
 }
+
+#loadingBar {
+    width: 100%;
+    background-color: black;
+    border: 2px solid green;
+    height: 20px;
+    margin-top: 10px;
+}
+#progress {
+    width: 0;
+    height: 100%;
+    background-color: green;
+    animation: load 5s linear forwards;
+}
+@keyframes load {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+
+#asciiArt {
+    color: #00FF00;
+    font-family: 'Courier New', monospace;
+    text-align: center;
+    animation: flicker 1.5s infinite alternate;
+    margin-bottom: 20px;
+    white-space: pre;
+    font-size: 10px;
+}
+
+@keyframes flicker {
+    0%   { opacity: 1; }
+    50%  { opacity: 0.8; }
+    100% { opacity: 1; }
+}
+
 </style>
 
 </head>
@@ -75,6 +111,33 @@ body, html {
 
 <div id="terminalView" class="hidden">
     <div id="container">
+<div id="loadingBarContainer">
+<pre id="asciiArt">
+  _____           _           _   
+ |  __ \         (_)         | |  
+ | |__) | __ ___  _  ___  ___| |_ 
+ |  ___/ '__/ _ \| |/ _ \/ __| __|
+ | |   | | | (_) | |  __/ (__| |_ 
+ |_|___|_| _\___/| |\___|\___|\__|
+  / ____(_) |   _/ |   | |        
+ | (___  _| | _|__/ __ | |_       
+  \___ \| | |/ _ \ '_ \| __|      
+  ____) | | |  __/ | | | |_       
+ |_____/|_|_|\___|_| |_|\__|      
+ \ \        / (_)                 
+  \ \  /\  / / _ _ __ ___         
+   \ \/  \/ / | | '__/ _ \        
+    \  /\  /  | | | |  __/        
+     \/  \/   |_|_|  \___|        
+                                  
+                                  
+</pre>
+    <p>Verbindung wird aufgebaut...</p>
+    <div id="loadingBar">
+        <div id="progress"></div>
+    </div>
+</div>
+
         <div id="intro"></div>
         <button id="startBtn" class="hidden">Verbindung aufbauen</button>
         <div id="mainView" class="hidden">
@@ -212,6 +275,17 @@ Turn around... Look at what you see... In her face... The mirror of your dreams.
     // Call playError() where glitches occur
     // Modify glitch sections:
     // Replace instances of terminal.classList.add('glitch');
+
+
+window.onload = function() {
+    const loadingContainer = document.getElementById('loadingBarContainer');
+    const startBtn = document.getElementById('startBtn');
+
+    setTimeout(() => {
+        loadingContainer.style.display = 'none';
+        startBtn.classList.remove('hidden');
+    }, 5000);
+};
 
 </script>
 </body>
