@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nullborn Escape</title>
+    <style>
+        /* General Styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        /* Game Container */
+        #game-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        /* Game Canvas */
+        #game-canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+        }
+        
+        /* UI Elements */
+        #score-display {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 20px;
+            text-shadow: 0 0 8px #00ff00;
+            z-index: 10;
+        }
+        
+        #lives-display {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            text-shadow: 0 0 8px #00ff00;
+            z-index: 10;
+        }
+        
+        #level-display {
+            position: absolute;
+            top: 40px;
+            left: 10px;
+            font-size: 16px;
+            text-shadow: 0 0 8px #00ff00;
+            z-index: 10;
+        }
+        
+        #powerup-display {
+            position: absolute;
+            bottom: 80px;
+            right: 10px;
+            font-size: 18px;
+            text-shadow: 0 0 8px #00ff00;
+            z-index: 10;
+        }
+        
+        #message-display {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 16px;
+            text-shadow: 0 0 8px #00ff00;
+            opacity: 0.7;
+            z-index: 10;
+            background-color: rgba(0, 0, 0, 0.7); /* Add semi-transparent background */
+            padding: 5px 0;
+        }
+        
+        /* Game Over Screen */
+        #game-over {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+        
+        #game-over.visible {
+            opacity: 1;
+        }
+        
+        #game-over h1 {
+            color: #ff0000;
+            font-size: 40px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #ff0000;
+        }
+        
+        #game-over p {
+            color: #00ff00;
+            font-size: 24px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 8px #00ff00;
+        }
+        
+        /* Touch Controls */
+        #touch-controls {
+            position: absolute;
+            bottom: 70px; /* Moved higher up to avoid overlapping with message display */
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+        }
+        
+        .button-row {
+            display: flex;
+            margin: 3px 0;
+        }
+        
+        .touch-button {
+            width: 55px;
+            height: 55px;
+            margin: 0 3px;
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            background-color: rgba(0, 255, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            opacity: 0.7; /* Make buttons semi-transparent */
+        }
+        
+        .touch-button:active {
+            background-color: rgba(0, 255, 0, 0.3);
+            opacity: 0.9;
+        }
+        
+        #button-powerup {
+            width: 70px;
+            height: 35px;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+        
+        /* Glitch Effect */
+        .glitch {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 255, 0, 0.05);
+            pointer-events: none;
+            opacity: 0;
+            z-index: 5;
+        }
+        
+        @media (max-width: 600px) {
+            .touch-button {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+            
+            #button-powerup {
+                width: 60px;
+                height: 30px;
+                font-size: 12px;
+            }
+            
+            #score-display, #lives-display {
+                font-size: 16px;
+            }
+            
+            #level-display {
+                font-size: 14px;
+            }
+            
+            #message-display {
+                font-size: 14px;
+                padding: 3px 0;
+            }
+            
+            #touch-controls {
+                bottom: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hintergrund-Musik -->
+    <audio id="bg-music" src="nullbornescape.mp3" loop preload="auto"></audio>
+
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+        
+        <div id="score-display">Score: 0</div>
+        <div id="level-display">Level: 1</div>
+        <div id="lives-display">♥️♥️♥️♥️</div>
+        <div id="powerup-display"></div>
+        <div id="message-display"></div>
+        
+        <div id="touch-controls">
+            <div class="button-row">
+                <div class="touch-button" id="button-up">⬆️</div>
+            </div>
+            <div class="button-row">
+                <div class="touch-button" id="button-left">⬅️</div>
+                <div class="touch-button" id="button-right">➡️</div>
+            </div>
+            <div class="button-row">
+                <div class="touch-button" id="button-down">⬇️</div>
+            </div>
+            <div class="touch-button" id="button-powerup">TELEPORT</div>
+        </div>
+        
+        <div id="game-over">
+            <h1>SIGNAL LOST</h1>
+            <p>Final Score: <span id="final-score">0</span></p>
+            <p>Restarting in 3...</p>
+        </div>
+        
+        <div class="glitch"></div>
+    </div>
+
+    <script>
+        // Game Configuration
+        const config = {
+            // Game settings
+            cellSize: 20,
+            playerSpeed: 3,
+            nullbornBaseSpeed: 2,
+            speedIncreasePerLevel: 0.2,
+            boostMultiplier: 1.8,
+            boostDuration: 5000,
+            playerImmunityAfterHit: 1500,
+            
+            // Maze settings
+            mazeDensity: 0.25, // Reduced density to create more open spaces
+            pitDensity: 0.02,
+            boostDensity: 0.01,
+            powerupDensity: 0.005,
+            
+            // Scoring
+            scorePerFrame: 0.05,
+            levelUpScore: 100,
+            
+            // UI
+            glitchMessagesInterval: [5000, 15000],
+            maxLives: 4
+        };
+        
+        // Game State
+        const state = {
+            score: 0,
+            level: 1,
+            lives: config.maxLives,
+            maze: [],
+            player: {
+                x: 0,
+                y: 0,
+                dx: 0,
+                dy: 0,
+                speed: config.playerSpeed,
+                boosted: false,
+                boostTimeLeft: 0,
+                powerups: 0,
+                immuneUntil: 0,
+                emoji: "😶"
+            },
+            nullborn: {
+                x: 0,
+                y: 0,
+                dx: 0,
+                dy: 0,
+                speed: config.nullbornBaseSpeed,
+                pathfinding: true,
+                emoji: "👽",
+                lastMoveDir: null,
+                stuckCount: 0,
+                lastPositions: []
+            },
+            mazeWidth: 0,
+            mazeHeight: 0,
+            gameOver: false,
+            lastTime: 0,
+            keys: {
+                up: false,
+                down: false,
+                left: false,
+                right: false,
+                space: false
+            },
+            touchControls: {
+                up: false,
+                down: false,
+                left: false,
+                right: false,
+                powerup: false
+            },
+            glitchMessages: [
+                "Die Tunnel flüstern...",
+                "Du bist nicht allein...",
+                "Etwas beobachtet dich...",
+                "84.6 MHz...",
+                "Der Memory Core erwacht...",
+                "Die Frequenz wird stärker...",
+                "Kannst du es hören?",
+                "Project Silent Wire...",
+                "Eine Echo-Trägerin...",
+                "Sie suchen nach dir...",
+                "Die Nullborn sind nah...",
+                "Vererbtes Trauma...",
+                "Das Signal ruft...",
+                "Rafa ist bei dir...",
+                "Sie erinnern sich...",
+                "Die Vergessenen kehren zurück...",
+                "Das Glitchfield wächst...",
+                "Das Vergessen ist nur einen Atemzug tief...",
+                "Milana weiß es...",
+                "Der See leuchtet...",
+                "Elektroden an deinen Schläfen...",
+                "Ein Fenster in die Frequenzwelt...",
+                "Der Resonator pulsiert...",
+                "Static Fade...",
+                "Deine Erinnerungen gehören nicht dir..."
+            ],
+            nextGlitchMessage: 0
+        };
+        
+        // Get DOM elements
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        const scoreDisplay = document.getElementById('score-display');
+        const livesDisplay = document.getElementById('lives-display');
+        const levelDisplay = document.getElementById('level-display');
+        const powerupDisplay = document.getElementById('powerup-display');
+        const messageDisplay = document.getElementById('message-display');
+        const gameOverScreen = document.getElementById('game-over');
+        const finalScoreDisplay = document.getElementById('final-score');
+        const glitchElement = document.querySelector('.glitch');
+        
+        // Set canvas size
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            // Recalculate maze dimensions
+            state.mazeWidth = Math.floor(canvas.width / config.cellSize);
+            state.mazeHeight = Math.floor(canvas.height / config.cellSize);
+            
+            // Only generate a new maze if we don't already have one or if sizes changed dramatically
+            if (state.maze.length === 0 || 
+                Math.abs(state.maze[0].length - state.mazeWidth) > 5 || 
+                Math.abs(state.maze.length - state.mazeHeight) > 5) {
+                generateMaze();
+                placeEntities();
+            }
+        }
+        
+        // Generate maze using a simplified algorithm to ensure there are no isolated sections
+        function generateMaze() {
+            // Initialize maze with empty cells
+            state.maze = Array(state.mazeHeight).fill().map(() => Array(state.mazeWidth).fill(0));
+            
+            // First pass: Fill with random walls but ensure connectivity
+            for (let y = 0; y < state.mazeHeight; y++) {
+                for (let x = 0; x < state.mazeWidth; x++) {
+                    // Ensure border is all walls
+                    if (x === 0 || y === 0 || x === state.mazeWidth - 1 || y === state.mazeHeight - 1) {
+                        state.maze[y][x] = 1; // Wall
+                    } 
+                    // Random walls inside, with reduced density
+                    else if (Math.random() < config.mazeDensity * 0.8) {
+                        state.maze[y][x] = 1; // Wall
+                    }
+                }
+            }
+            
+            // Second pass: Ensure no 2x2 solid wall blocks to prevent enclosed areas
+            for (let y = 1; y < state.mazeHeight - 2; y++) {
+                for (let x = 1; x < state.mazeWidth - 2; x++) {
+                    // Check if we have a 2x2 block of walls
+                    if (state.maze[y][x] === 1 && 
+                        state.maze[y][x+1] === 1 && 
+                        state.maze[y+1][x] === 1 && 
+                        state.maze[y+1][x+1] === 1) {
+                        // Make one of the cells a path to break the enclosed area
+                        state.maze[y+1][x+1] = 0;
+                    }
+                }
+            }
+            
+            // Third pass: Check for and break isolated wall sections
+            breakIsolatedWalls();
+            
+            // Fourth pass: Add pits, boosts and powerups
+            for (let y = 1; y < state.mazeHeight - 1; y++) {
+                for (let x = 1; x < state.mazeWidth - 1; x++) {
+                    if (state.maze[y][x] === 0) { // If it's an empty cell
+                        if (Math.random() < config.pitDensity) {
+                            state.maze[y][x] = 2; // Pit
+                        } else if (Math.random() < config.boostDensity) {
+                            state.maze[y][x] = 3; // Boost
+                        } else if (Math.random() < config.powerupDensity) {
+                            state.maze[y][x] = 4; // Powerup
+                        }
+                    }
+                }
+            }
+            
+            // Final pass: Ensure connectivity by breaking walls if needed
+            ensurePathConnectivity();
+        }
+        
+        // Function to break isolated wall sections
+        function breakIsolatedWalls() {
+            for (let y = 1; y < state.mazeHeight - 1; y++) {
+                for (let x = 1; x < state.mazeWidth - 1; x++) {
+                    if (state.maze[y][x] === 1) { // If it's a wall
+                        // Count surrounding walls
+                        let wallCount = 0;
+                        for (let dy = -1; dy <= 1; dy++) {
+                            for (let dx = -1; dx <= 1; dx++) {
+                                if (dx === 0 && dy === 0) continue;
+                                if (state.maze[y+dy][x+dx] === 1) {
+                                    wallCount++;
+                                }
+                            }
+                        }
+                        
+                        // If too many surrounding walls (potential dead end), break one
+                        if (wallCount > 6) {
+                            state.maze[y][x] = 0;
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Function to ensure path connectivity by breaking walls if needed
+        function ensurePathConnectivity() {
+            // Use a flood fill algorithm to check connectivity
+            const visited = Array(state.mazeHeight).fill().map(() => Array(state.mazeWidth).fill(false));
+            const queue = [];
+            
+            // Find a starting open cell
+            let startX = -1, startY = -1;
+            for (let y = 1; y < state.mazeHeight - 1 && startY === -1; y++) {
+                for (let x = 1; x < state.mazeWidth - 1 && startX === -1; x++) {
+                    if (state.maze[y][x] === 0) {
+                        startX = x;
+                        startY = y;
+                    }
+                }
+            }
+            
+            if (startX === -1) return; // No open cells found
+            
+            queue.push({x: startX, y: startY});
+            visited[startY][startX] = true;
+            
+            // Flood fill to mark all connected cells
+            while (queue.length > 0) {
+                const {x, y} = queue.shift();
+                
+                // Check 4 directions (up, right, down, left)
+                const directions = [{dx: 0, dy: -1}, {dx: 1, dy: 0}, {dx: 0, dy: 1}, {dx: -1, dy: 0}];
+                
+                for (const dir of directions) {
+                    const nx = x + dir.dx;
+                    const ny = y + dir.dy;
+                    
+                    if (nx < 0 || nx >= state.mazeWidth || ny < 0 || ny >= state.mazeHeight) continue;
+                    
+                    if (!visited[ny][nx] && state.maze[ny][nx] !== 1) { // If not visited and not a wall
+                        visited[ny][nx] = true;
+                        queue.push({x: nx, y: ny});
+                    }
+                }
+            }
+            
+            // Find any unvisited non-wall cells and create paths to them
+            for (let y = 1; y < state.mazeHeight - 1; y++) {
+                for (let x = 1; x < state.mazeWidth - 1; x++) {
+                    if (!visited[y][x] && state.maze[y][x] !== 1) {
+                        // Find the nearest visited cell
+                        let minDist = Infinity;
+                        let closestX = -1, closestY = -1;
+                        
+                        for (let vy = 1; vy < state.mazeHeight - 1; vy++) {
+                            for (let vx = 1; vx < state.mazeWidth - 1; vx++) {
+                                if (visited[vy][vx]) {
+                                    const dist = Math.abs(x - vx) + Math.abs(y - vy);
+                                    if (dist < minDist) {
+                                        minDist = dist;
+                                        closestX = vx;
+                                        closestY = vy;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        if (closestX !== -1) {
+                            // Create a path to the closest visited cell
+                            let cx = x, cy = y;
+                            while ((cx !== closestX || cy !== closestY) && minDist > 0) {
+                                // Move one step toward the closest visited cell
+                                if (cx < closestX) {
+                                    cx++;
+                                } else if (cx > closestX) {
+                                    cx--;
+                                } else if (cy < closestY) {
+                                    cy++;
+                                } else if (cy > closestY) {
+                                    cy--;
+                                }
+                                
+                                // Break any walls in the path
+                                if (state.maze[cy][cx] === 1) {
+                                    state.maze[cy][cx] = 0;
+                                }
+                                
+                                minDist--;
+                            }
+                            
+                            // Now do another flood fill from this cell
+                            const newQueue = [{x, y}];
+                            visited[y][x] = true;
+                            
+                            while (newQueue.length > 0) {
+                                const {x: nx, y: ny} = newQueue.shift();
+                                
+                                const directions = [{dx: 0, dy: -1}, {dx: 1, dy: 0}, {dx: 0, dy: 1}, {dx: -1, dy: 0}];
+                                
+                                for (const dir of directions) {
+                                    const nnx = nx + dir.dx;
+                                    const nny = ny + dir.dy;
+                                    
+                                    if (nnx < 0 || nnx >= state.mazeWidth || nny < 0 || nny >= state.mazeHeight) continue;
+                                    
+                                    if (!visited[nny][nnx] && state.maze[nny][nnx] !== 1) {
+                                        visited[nny][nnx] = true;
+                                        newQueue.push({x: nnx, y: nny});
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Final check: ensure there are no 3x3 solid wall blocks
+            for (let y = 1; y < state.mazeHeight - 3; y++) {
+                for (let x = 1; x < state.mazeWidth - 3; x++) {
+                    let allWalls = true;
+                    
+                    // Check if we have a 3x3 block of walls
+                    for (let dy = 0; dy < 3; dy++) {
+                        for (let dx = 0; dx < 3; dx++) {
+                            if (state.maze[y+dy][x+dx] !== 1) {
+                                allWalls = false;
+                            }
+                        }
+                    }
+                    
+                    if (allWalls) {
+                        // Create a path through the middle
+                        state.maze[y+1][x+1] = 0;
+                    }
+                }
+            }
+        }
+        
+        // Place player and nullborn at random positions, ensuring minimum distance
+        function placeEntities() {
+            let playerPlaced = false;
+            let nullbornPlaced = false;
+            
+            // Place player
+            while (!playerPlaced) {
+                const x = Math.floor(Math.random() * (state.mazeWidth - 2)) + 1;
+                const y = Math.floor(Math.random() * (state.mazeHeight - 2)) + 1;
+                
+                if (state.maze[y][x] === 0) { // Empty cell
+                    state.player.x = x * config.cellSize;
+                    state.player.y = y * config.cellSize;
+                    playerPlaced = true;
+                }
+            }
+            
+            // Place nullborn at least 10 cells away
+            while (!nullbornPlaced) {
+                const x = Math.floor(Math.random() * (state.mazeWidth - 2)) + 1;
+                const y = Math.floor(Math.random() * (state.mazeHeight - 2)) + 1;
+                
+                const playerCellX = Math.floor(state.player.x / config.cellSize);
+                const playerCellY = Math.floor(state.player.y / config.cellSize);
+                
+                const distance = Math.sqrt(Math.pow(x - playerCellX, 2) + Math.pow(y - playerCellY, 2));
+                
+                if (state.maze[y][x] === 0 && distance >= 10) {
+                    state.nullborn.x = x * config.cellSize;
+                    state.nullborn.y = y * config.cellSize;
+                    nullbornPlaced = true;
+                }
+            }
+        }
+        
+        // Input handling - Keyboard
+        function setupKeyboardControls() {
+            document.addEventListener('keydown', (e) => {
+                switch (e.key.toLowerCase()) {
+                    case 'w': state.keys.up = true; break;
+                    case 'a': state.keys.left = true; break;
+                    case 's': state.keys.down = true; break;
+                    case 'd': state.keys.right = true; break;
+                    case ' ': usePowerup(); break;
+                }
+            });
+            
+            document.addEventListener('keyup', (e) => {
+                switch (e.key.toLowerCase()) {
+                    case 'w': state.keys.up = false; break;
+                    case 'a': state.keys.left = false; break;
+                    case 's': state.keys.down = false; break;
+                    case 'd': state.keys.right = false; break;
+                }
+            });
+        }
+        
+        // Input handling - Touch
+        function setupTouchControls() {
+            // Up button
+            const upButton = document.getElementById('button-up');
+            upButton.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                state.touchControls.up = true;
+            });
+            upButton.addEventListener('touchend', () => {
+                state.touchControls.up = false;
+            });
+            upButton.addEventListener('touchcancel', () => {
+                state.touchControls.up = false;
+            });
+            
+            // Down button
+            const downButton = document.getElementById('button-down');
+            downButton.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                state.touchControls.down = true;
+            });
+            downButton.addEventListener('touchend', () => {
+                state.touchControls.down = false;
+            });
+            downButton.addEventListener('touchcancel', () => {
+                state.touchControls.down = false;
+            });
+            
+            // Left button
+            const leftButton = document.getElementById('button-left');
+            leftButton.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                state.touchControls.left = true;
+            });
+            leftButton.addEventListener('touchend', () => {
+                state.touchControls.left = false;
+            });
+            leftButton.addEventListener('touchcancel', () => {
+                state.touchControls.left = false;
+            });
+            
+            // Right button
+            const rightButton = document.getElementById('button-right');
+            rightButton.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                state.touchControls.right = true;
+            });
+            rightButton.addEventListener('touchend', () => {
+                state.touchControls.right = false;
+            });
+            rightButton.addEventListener('touchcancel', () => {
+                state.touchControls.right = false;
+            });
+            
+            // Powerup button
+            const powerupButton = document.getElementById('button-powerup');
+            powerupButton.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                usePowerup();
+            });
+            
+            // Prevent default touch behavior to avoid scrolling
+            document.addEventListener('touchmove', (e) => {
+                if (e.target.className === 'touch-button') {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        }
+        
+        // Use powerup (teleport)
+        function usePowerup() {
+            if (state.player.powerups > 0 && !state.gameOver) {
+                // Find a safe spot to teleport
+                let safeTeleportFound = false;
+                let attempts = 0;
+                const maxAttempts = 100;
+                
+                while (!safeTeleportFound && attempts < maxAttempts) {
+                    attempts++;
+                    
+                    // Random position in the maze
+                    const x = Math.floor(Math.random() * (state.mazeWidth - 2)) + 1;
+                    const y = Math.floor(Math.random() * (state.mazeHeight - 2)) + 1;
+                    
+                    // Check if it's an empty cell and far from nullborn
+                    if (state.maze[y][x] === 0) {
+                        const nullbornCellX = Math.floor(state.nullborn.x / config.cellSize);
+                        const nullbornCellY = Math.floor(state.nullborn.y / config.cellSize);
+                        
+                        const distance = Math.sqrt(Math.pow(x - nullbornCellX, 2) + Math.pow(y - nullbornCellY, 2));
+                        
+                        if (distance >= 8) { // Safe distance
+                            state.player.x = x * config.cellSize;
+                            state.player.y = y * config.cellSize;
+                            state.player.powerups--;
+                            updatePowerupDisplay();
+                            safeTeleportFound = true;
+                            
+                            // Create glitch effect
+                            triggerGlitchEffect();
+                        }
+                    }
+                }
+                
+                // If no safe spot found after max attempts, just teleport to a random empty cell
+                if (!safeTeleportFound) {
+                    let validCells = [];
+                    
+                    for (let y = 1; y < state.mazeHeight - 1; y++) {
+                        for (let x = 1; x < state.mazeWidth - 1; x++) {
+                            if (state.maze[y][x] === 0) {
+                                validCells.push({x, y});
+                            }
+                        }
+                    }
+                    
+                    if (validCells.length > 0) {
+                        const randomCell = validCells[Math.floor(Math.random() * validCells.length)];
+                        state.player.x = randomCell.x * config.cellSize;
+                        state.player.y = randomCell.y * config.cellSize;
+                        state.player.powerups--;
+                        updatePowerupDisplay();
+                        
+                        // Create glitch effect
+                        triggerGlitchEffect();
+                    }
+                }
+            }
+        }
+        
+        // Trigger visual glitch effect
+        function triggerGlitchEffect() {
+            glitchElement.style.opacity = '0.5';
+            setTimeout(() => {
+                glitchElement.style.opacity = '0';
+            }, 300);
+        }
+        
+        // Update movement based on input
+        function updateMovement(deltaTime) {
+            // Reset movement
+            state.player.dx = 0;
+            state.player.dy = 0;
+            
+            // Calculate current effective speed
+            const effectiveSpeed = state.player.boosted
+                ? state.player.speed * config.boostMultiplier
+                : state.player.speed;
+            
+            // Apply keyboard input
+            if (state.keys.up || state.touchControls.up) state.player.dy = -effectiveSpeed;
+            if (state.keys.down || state.touchControls.down) state.player.dy = effectiveSpeed;
+            if (state.keys.left || state.touchControls.left) state.player.dx = -effectiveSpeed;
+            if (state.keys.right || state.touchControls.right) state.player.dx = effectiveSpeed;
+            
+            // Update player position
+            const newX = state.player.x + state.player.dx;
+            const newY = state.player.y + state.player.dy;
+            
+            // Check collision with walls
+            const nextCellX = Math.floor(newX / config.cellSize);
+            const nextCellY = Math.floor(newY / config.cellSize);
+            const currentCellX = Math.floor(state.player.x / config.cellSize);
+            const currentCellY = Math.floor(state.player.y / config.cellSize);
+            
+            // Check if moving horizontally
+            if (state.player.dx !== 0 && nextCellX >= 0 && nextCellX < state.mazeWidth) {
+                // Check if there's a wall in the way
+                if (state.maze[currentCellY][nextCellX] !== 1) {
+                    state.player.x = newX;
+                }
+            }
+            
+            // Check if moving vertically
+            if (state.player.dy !== 0 && nextCellY >= 0 && nextCellY < state.mazeHeight) {
+                // Check if there's a wall in the way
+                if (state.maze[nextCellY][currentCellX] !== 1) {
+                    state.player.y = newY;
+                }
+            }
+            
+            // Update nullborn (simple pathfinding)
+            updateNullborn(deltaTime);
+            
+            // Check for collisions with game elements
+            checkCollisions();
+            
+            // Update boost timer
+            if (state.player.boosted) {
+                state.player.boostTimeLeft -= deltaTime;
+                if (state.player.boostTimeLeft <= 0) {
+                    state.player.boosted = false;
+                    state.player.emoji = "😶"; // Reset to normal face
+                }
+            }
+        }
+        
+        // Update nullborn position with simple pathfinding
+        function updateNullborn(deltaTime) {
+            const nullbornSpeed = state.nullborn.speed + ((state.level - 1) * config.speedIncreasePerLevel);
+            
+            // Calculate grid positions
+            const nullbornCellX = Math.floor(state.nullborn.x / config.cellSize);
+            const nullbornCellY = Math.floor(state.nullborn.y / config.cellSize);
+            const playerCellX = Math.floor(state.player.x / config.cellSize);
+            const playerCellY = Math.floor(state.player.y / config.cellSize);
+            
+            // If nullborn and player are in the same cell
+            if (nullbornCellX === playerCellX && nullbornCellY === playerCellY) {
+                // Move directly toward player's exact position
+                const dx = state.player.x - state.nullborn.x;
+                const dy = state.player.y - state.nullborn.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                
+                if (dist > 0) {
+                    state.nullborn.dx = (dx / dist) * nullbornSpeed;
+                    state.nullborn.dy = (dy / dist) * nullbornSpeed;
+                }
+            } else {
+                // Simple A* pathfinding
+                // Determine direction to player
+                let dx = 0;
+                let dy = 0;
+                
+                // Horizontal movement
+                if (playerCellX < nullbornCellX && state.maze[nullbornCellY][nullbornCellX - 1] !== 1) {
+                    dx = -1;
+                } else if (playerCellX > nullbornCellX && state.maze[nullbornCellY][nullbornCellX + 1] !== 1) {
+                    dx = 1;
+                }
+                
+                // Vertical movement
+                if (playerCellY < nullbornCellY && state.maze[nullbornCellY - 1][nullbornCellX] !== 1) {
+                    dy = -1;
+                } else if (playerCellY > nullbornCellY && state.maze[nullbornCellY + 1][nullbornCellX] !== 1) {
+                    dy = 1;
+                }
+                
+                // If stuck, try random directions
+                if (dx === 0 && dy === 0) {
+                    const directions = [];
+                    
+                    // Check all four directions
+                    if (nullbornCellX > 0 && state.maze[nullbornCellY][nullbornCellX - 1] !== 1) directions.push({dx: -1, dy: 0});
+                    if (nullbornCellX < state.mazeWidth - 1 && state.maze[nullbornCellY][nullbornCellX + 1] !== 1) directions.push({dx: 1, dy: 0});
+                    if (nullbornCellY > 0 && state.maze[nullbornCellY - 1][nullbornCellX] !== 1) directions.push({dx: 0, dy: -1});
+                    if (nullbornCellY < state.mazeHeight - 1 && state.maze[nullbornCellY + 1][nullbornCellX] !== 1) directions.push({dx: 0, dy: 1});
+                    
+                    if (directions.length > 0) {
+                        const randomDir = directions[Math.floor(Math.random() * directions.length)];
+                        dx = randomDir.dx;
+                        dy = randomDir.dy;
+                    }
+                }
+                
+                // Set nullborn velocity
+                const length = Math.sqrt(dx * dx + dy * dy);
+                if (length > 0) {
+                    state.nullborn.dx = (dx / length) * nullbornSpeed;
+                    state.nullborn.dy = (dy / length) * nullbornSpeed;
+                } else {
+                    state.nullborn.dx = 0;
+                    state.nullborn.dy = 0;
+                }
+            }
+            
+            // Update nullborn position
+            const newX = state.nullborn.x + state.nullborn.dx;
+            const newY = state.nullborn.y + state.nullborn.dy;
+            
+            // Check collision with walls
+            const nextCellX = Math.floor(newX / config.cellSize);
+            const nextCellY = Math.floor(newY / config.cellSize);
+            
+            // Make sure we're within bounds
+            if (nextCellX >= 0 && nextCellX < state.mazeWidth && 
+                nextCellY >= 0 && nextCellY < state.mazeHeight) {
+                
+                // Check if moving horizontally into a wall
+                if (state.nullborn.dx !== 0) {
+                    if (state.maze[nullbornCellY][nextCellX] !== 1) {
+                        state.nullborn.x = newX;
+                    }
+                }
+                
+                // Check if moving vertically into a wall
+                if (state.nullborn.dy !== 0) {
+                    if (state.maze[nextCellY][nullbornCellX] !== 1) {
+                        state.nullborn.y = newY;
+                    }
+                }
+            }
+            
+            // Update nullborn emoji based on proximity to player
+            const distToPlayer = Math.sqrt(
+                Math.pow(state.player.x - state.nullborn.x, 2) +
+                Math.pow(state.player.y - state.nullborn.y, 2)
+            );
+            
+            if (distToPlayer < config.cellSize * 5) {
+                state.nullborn.emoji = "😈"; // Close and threatening
+            } else {
+                state.nullborn.emoji = "👽"; // Normal state
+            }
+        }
+        
+        // Check for collisions with game elements
+        function checkCollisions() {
+            // Calculate player's current cell
+            const cellX = Math.floor(state.player.x / config.cellSize);
+            const cellY = Math.floor(state.player.y / config.cellSize);
+            
+            // Ensure we're within bounds
+            if (cellX >= 0 && cellX < state.mazeWidth && cellY >= 0 && cellY < state.mazeHeight) {
+                // Check what's in the current cell
+                const cellContent = state.maze[cellY][cellX];
+                
+                // Pit collision
+                if (cellContent === 2) {
+                    if (Date.now() > state.player.immuneUntil) {
+                        state.lives -= 0.5;
+                        state.player.emoji = "😨"; // Scared face
+                        state.player.immuneUntil = Date.now() + config.playerImmunityAfterHit;
+                        
+                        // Reset face after a short delay
+                        setTimeout(() => {
+                            if (!state.player.boosted) {
+                                state.player.emoji = "😶"; // Reset to normal face
+                            }
+                        }, 1000);
+                        
+                        // Update lives display
+                        updateLivesDisplay();
+                        
+                        // Check for game over
+                        if (state.lives <= 0) {
+                            endGame();
+                        }
+                    }
+                }
+                
+                // Boost collision
+                else if (cellContent === 3) {
+                    state.player.boosted = true;
+                    state.player.boostTimeLeft = config.boostDuration;
+                    state.player.emoji = "😎"; // Cool face for boosted
+                    
+                    // Remove the boost from the maze
+                    state.maze[cellY][cellX] = 0;
+                    
+                    // Trigger visual effect
+                    triggerGlitchEffect();
+                }
+                
+                // Powerup collision
+                else if (cellContent === 4) {
+                    state.player.powerups++;
+                    
+                    // Remove the powerup from the maze
+                    state.maze[cellY][cellX] = 0;
+                    
+                    // Update display
+                    updatePowerupDisplay();
+                    
+                    // Trigger visual effect
+                    triggerGlitchEffect();
+                }
+            }
+            
+            // Check collision with nullborn
+            const distance = Math.sqrt(
+                Math.pow(state.player.x - state.nullborn.x, 2) +
+                Math.pow(state.player.y - state.nullborn.y, 2)
+            );
+            
+            if (distance < config.cellSize / 2 && Date.now() > state.player.immuneUntil) {
+                // Game over on nullborn collision
+                endGame();
+            }
+        }
+        
+        // Update the score
+        function updateScore(deltaTime) {
+            if (!state.gameOver) {
+                // Increase score
+                state.score += config.scorePerFrame;
+                
+                // Format score to 2 decimal places
+                const formattedScore = Math.floor(state.score * 100) / 100;
+                scoreDisplay.textContent = `Score: ${formattedScore}`;
+                
+                // Check for level up
+                const currentLevel = Math.floor(state.score / config.levelUpScore) + 1;
+                if (currentLevel > state.level) {
+                    state.level = currentLevel;
+                    levelDisplay.textContent = `Level: ${state.level}`;
+                    
+                    // Brief glitch effect on level up
+                    triggerGlitchEffect();
+                    
+                    // Show a random glitch message
+                    showRandomGlitchMessage();
+                }
+            }
+        }
+        
+        // Update the lives display
+        function updateLivesDisplay() {
+            const fullHearts = Math.floor(state.lives);
+            const halfHeart = (state.lives % 1) >= 0.5;
+            
+            let heartsDisplay = '';
+            for (let i = 0; i < fullHearts; i++) {
+                heartsDisplay += '♥️';
+            }
+            if (halfHeart) {
+                heartsDisplay += '💔';
+            }
+            
+            // Fill remaining with empty hearts
+            const emptyHearts = Math.floor(config.maxLives - state.lives);
+            for (let i = 0; i < emptyHearts; i++) {
+                // Don't add empty heart for the half heart
+                if (!(halfHeart && i === 0)) {
+                    heartsDisplay += '🖤';
+                }
+            }
+            
+            livesDisplay.textContent = heartsDisplay;
+        }
+        
+        // Update powerup display
+        function updatePowerupDisplay() {
+            if (state.player.powerups > 0) {
+                powerupDisplay.textContent = `Teleport: ${state.player.powerups}`;
+            } else {
+                powerupDisplay.textContent = '';
+            }
+        }
+        
+        // Show a random glitch message
+        function showRandomGlitchMessage() {
+            const message = state.glitchMessages[Math.floor(Math.random() * state.glitchMessages.length)];
+            messageDisplay.textContent = message;
+            
+            // Fade out after a few seconds
+            setTimeout(() => {
+                messageDisplay.textContent = '';
+            }, 5000);
+        }
+        
+        // Check if it's time for a random glitch message
+        function updateGlitchMessages(currentTime) {
+            if (currentTime >= state.nextGlitchMessage) {
+                showRandomGlitchMessage();
+                
+                // Set next message time
+                const minInterval = config.glitchMessagesInterval[0];
+                const maxInterval = config.glitchMessagesInterval[1];
+                const interval = Math.random() * (maxInterval - minInterval) + minInterval;
+                
+                state.nextGlitchMessage = currentTime + interval;
+            }
+        }
+        
+        // End the game
+        function endGame() {
+            state.gameOver = true;
+            
+            // Update final score display
+            finalScoreDisplay.textContent = Math.floor(state.score * 100) / 100;
+            
+            // Show game over screen
+            gameOverScreen.classList.add('visible');
+            
+            // Set countdown text
+            const countdownElement = gameOverScreen.querySelector('p:last-child');
+            let countdown = 3;
+            
+            // Update countdown every second
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                countdownElement.textContent = `Restarting in ${countdown}...`;
+                
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    resetGame();
+                }
+            }, 1000);
+        }
+        
+        // Reset the game
+        function resetGame() {
+            // Hide game over screen
+            gameOverScreen.classList.remove('visible');
+            
+            // Reset game state
+            state.score = 0;
+            state.level = 1;
+            state.lives = config.maxLives;
+            state.player.powerups = 0;
+            state.player.boosted = false;
+            state.player.emoji = "😶";
+            state.gameOver = false;
+            
+            // Generate new maze
+            generateMaze();
+            placeEntities();
+            
+            // Update displays
+            scoreDisplay.textContent = `Score: 0`;
+            levelDisplay.textContent = `Level: 1`;
+            updateLivesDisplay();
+            updatePowerupDisplay();
+            messageDisplay.textContent = '';
+        }
+        
+        // Render the game
+        function render() {
+            // Clear canvas
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Render maze
+            renderMaze();
+            
+            // Render player
+            renderPlayer();
+            
+            // Render nullborn
+            renderNullborn();
+        }
+        
+        // Render the maze
+        function renderMaze() {
+            // Only render the visible part of the maze for performance
+            const viewportPadding = 2; // How many cells beyond viewport to render
+            
+            // Calculate viewport boundaries in maze cells
+            const minX = Math.max(0, Math.floor(0 / config.cellSize) - viewportPadding);
+            const maxX = Math.min(state.mazeWidth, Math.ceil(canvas.width / config.cellSize) + viewportPadding);
+            const minY = Math.max(0, Math.floor(0 / config.cellSize) - viewportPadding);
+            const maxY = Math.min(state.mazeHeight, Math.ceil(canvas.height / config.cellSize) + viewportPadding);
+            
+            for (let y = minY; y < maxY; y++) {
+                for (let x = minX; x < maxX; x++) {
+                    const cellX = x * config.cellSize;
+                    const cellY = y * config.cellSize;
+                    
+                    // Skip rendering if outside view
+                    if (cellX + config.cellSize < 0 || cellX > canvas.width ||
+                        cellY + config.cellSize < 0 || cellY > canvas.height) {
+                        continue;
+                    }
+                    
+                    // Render different cell types
+                    switch(state.maze[y][x]) {
+                        case 1: // Wall
+                            ctx.fillStyle = '#005500';
+                            ctx.fillRect(cellX, cellY, config.cellSize, config.cellSize);
+                            
+                            // Add subtle glow effect
+                            ctx.shadowColor = '#00ff00';
+                            ctx.shadowBlur = 5;
+                            ctx.strokeStyle = '#00aa00';
+                            ctx.lineWidth = 1;
+                            ctx.strokeRect(cellX, cellY, config.cellSize, config.cellSize);
+                            ctx.shadowBlur = 0;
+                            break;
+                            
+                        case 2: // Pit
+                            ctx.fillStyle = '#000';
+                            ctx.fillRect(cellX, cellY, config.cellSize, config.cellSize);
+                            
+                            // Draw pit symbol
+                            ctx.font = `${Math.floor(config.cellSize * 0.8)}px Arial`;
+                            ctx.fillStyle = '#ff0000';
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+                            ctx.fillText('🕳️', cellX + config.cellSize / 2, cellY + config.cellSize / 2);
+                            break;
+                            
+                        case 3: // Boost
+                            ctx.fillStyle = '#000';
+                            ctx.fillRect(cellX, cellY, config.cellSize, config.cellSize);
+                            
+                            // Draw boost symbol
+                            ctx.font = `${Math.floor(config.cellSize * 0.8)}px Arial`;
+                            ctx.fillStyle = '#00ff00';
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+                            ctx.fillText('⚡', cellX + config.cellSize / 2, cellY + config.cellSize / 2);
+                            
+                            // Add subtle pulsing glow
+                            const glowIntensity = (Math.sin(Date.now() / 300) + 1) * 5;
+                            ctx.shadowColor = '#00ff00';
+                            ctx.shadowBlur = glowIntensity;
+                            ctx.strokeStyle = '#00ff00';
+                            ctx.lineWidth = 1;
+                            ctx.strokeRect(cellX + 2, cellY + 2, config.cellSize - 4, config.cellSize - 4);
+                            ctx.shadowBlur = 0;
+                            break;
+                            
+                        case 4: // Powerup
+                            ctx.fillStyle = '#000';
+                            ctx.fillRect(cellX, cellY, config.cellSize, config.cellSize);
+                            
+                            // Draw powerup symbol
+                            ctx.font = `${Math.floor(config.cellSize * 0.8)}px Arial`;
+                            ctx.fillStyle = '#00ffff';
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+                            ctx.fillText('🔮', cellX + config.cellSize / 2, cellY + config.cellSize / 2);
+                            
+                            // Add subtle pulsing glow
+                            const powerupGlow = (Math.sin(Date.now() / 200) + 1) * 8;
+                            ctx.shadowColor = '#00ffff';
+                            ctx.shadowBlur = powerupGlow;
+                            ctx.strokeStyle = '#00ffff';
+                            ctx.lineWidth = 1;
+                            ctx.strokeRect(cellX + 2, cellY + 2, config.cellSize - 4, config.cellSize - 4);
+                            ctx.shadowBlur = 0;
+                            break;
+                    }
+                }
+            }
+        }
+        
+        // Render the player
+        function renderPlayer() {
+            // Add glow when boosted
+            if (state.player.boosted) {
+                ctx.shadowColor = '#00ff00';
+                ctx.shadowBlur = 15;
+            }
+            
+            // Player
+            ctx.font = `${Math.floor(config.cellSize * 0.9)}px Arial`;
+            ctx.fillStyle = state.player.boosted ? '#00ff00' : '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(state.player.emoji, state.player.x + config.cellSize / 2, state.player.y + config.cellSize / 2);
+            
+            // Reset shadow
+            ctx.shadowBlur = 0;
+        }
+        
+        // Render the nullborn
+        function renderNullborn() {
+            // Eerie glow for nullborn
+            ctx.shadowColor = '#ff0000';
+            ctx.shadowBlur = 10;
+            
+            // Nullborn
+            ctx.font = `${Math.floor(config.cellSize * 0.9)}px Arial`;
+            ctx.fillStyle = '#ff5555';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(state.nullborn.emoji, state.nullborn.x + config.cellSize / 2, state.nullborn.y + config.cellSize / 2);
+            
+            // Reset shadow
+            ctx.shadowBlur = 0;
+        }
+        
+        // Game loop
+        function gameLoop(timestamp) {
+            // Calculate delta time
+            const deltaTime = timestamp - state.lastTime;
+            state.lastTime = timestamp;
+            
+            // Skip if game is paused or delta time is too large
+            if (deltaTime > 100) {
+                requestAnimationFrame(gameLoop);
+
+    // Starte Hintergrund-Musik
+    const music = document.getElementById('bg-music');
+    music.volume = 0.5;  // Lautstärke 50%
+    music.play().catch(() => {
+        // Fallback: Warte auf erste Nutzer-Interaktion
+        const startOnInteraction = () => {
+            music.play();
+            window.removeEventListener('click', startOnInteraction);
+            window.removeEventListener('touchstart', startOnInteraction);
+        };
+        window.addEventListener('click', startOnInteraction);
+        window.addEventListener('touchstart', startOnInteraction);
+    });
+
+                return;
+            }
+            
+            // Update game state
+            if (!state.gameOver) {
+                updateMovement(deltaTime);
+                updateScore(deltaTime);
+                updateGlitchMessages(timestamp);
+            }
+            
+            // Render the game
+            render();
+            
+            // Request next frame
+            requestAnimationFrame(gameLoop);
+
+    // Starte Hintergrund-Musik
+    const music = document.getElementById('bg-music');
+    music.volume = 0.5;  // Lautstärke 50%
+    music.play().catch(() => {
+        // Fallback: Warte auf erste Nutzer-Interaktion
+        const startOnInteraction = () => {
+            music.play();
+            window.removeEventListener('click', startOnInteraction);
+            window.removeEventListener('touchstart', startOnInteraction);
+        };
+        window.addEventListener('click', startOnInteraction);
+        window.addEventListener('touchstart', startOnInteraction);
+    });
+
+        }
+        
+        // Initialize game
+        function initGame() {
+            // Resize canvas
+            resizeCanvas();
+            
+            // Setup event handlers
+            setupKeyboardControls();
+            setupTouchControls();
+            
+            // Add resize listener
+            window.addEventListener('resize', resizeCanvas);
+            
+            // Generate initial maze and place entities
+            generateMaze();
+            placeEntities();
+            
+            // Set up initial game state
+            state.lastTime = performance.now();
+            state.nextGlitchMessage = state.lastTime + 3000; // First message after 3 seconds
+            
+            // Update displays
+            updateLivesDisplay();
+            
+            // Start game loop
+            requestAnimationFrame(gameLoop);
+
+    // Starte Hintergrund-Musik
+    const music = document.getElementById('bg-music');
+    music.volume = 0.5;  // Lautstärke 50%
+    music.play().catch(() => {
+        // Fallback: Warte auf erste Nutzer-Interaktion
+        const startOnInteraction = () => {
+            music.play();
+            window.removeEventListener('click', startOnInteraction);
+            window.removeEventListener('touchstart', startOnInteraction);
+        };
+        window.addEventListener('click', startOnInteraction);
+        window.addEventListener('touchstart', startOnInteraction);
+    });
+
+        }
+        
+        // Start the game
+        initGame();
+    </script>
+</body>
+</html>
