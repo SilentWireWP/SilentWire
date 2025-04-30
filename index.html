@@ -44,6 +44,7 @@
   <audio id="bgm" src="musik.mp3" loop></audio>
 
   <script src="game.js"></script>
+
   <script>
     window.addEventListener('click', () => {
       const audio = document.getElementById("bgm");
@@ -78,6 +79,18 @@
       document.getElementById('mobile-controls').style.display = 'flex';
       document.getElementById('mobile-teleport').style.display = 'block';
     }
+
+    // PATCH-SYSTEM: lädt alle .js Dateien aus /patches (Server erforderlich)
+    fetch("patches/")
+      .then(r => r.text())
+      .then(html => {
+        const matches = [...html.matchAll(/href="(.*?\.js)"/g)];
+        for (const m of matches) {
+          const script = document.createElement("script");
+          script.src = "patches/" + m[1];
+          document.body.appendChild(script);
+        }
+      }).catch(err => console.warn("Keine Patch-Dateien geladen (lokal oder nicht gefunden)."));
   </script>
 </body>
 </html>
