@@ -5,38 +5,6 @@
   <title>Nullborn Escape</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="stylesheet" href="style.css">
-  <style>
-    #mobile-controls {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      z-index: 10;
-    }
-    #mobile-controls button {
-      width: 50px;
-      height: 50px;
-      background: black;
-      border: 2px solid #00ff00;
-      color: #00ff00;
-      font-size: 20px;
-    }
-    #mobile-teleport {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      display: none;
-      width: 60px;
-      height: 60px;
-      font-size: 28px;
-      background: black;
-      color: #ffcc00;
-      border: 2px solid #ffcc00;
-      z-index: 10;
-    }
-  </style>
 </head>
 <body>
   <div id="menu">
@@ -64,11 +32,11 @@
 
   <!-- Mobile Controls -->
   <div id="mobile-controls">
-    <button onclick="setDirection('up')">↑</button>
+    <button onclick="tapMove('up')">↑</button>
     <div>
-      <button onclick="setDirection('left')">←</button>
-      <button onclick="setDirection('down')">↓</button>
-      <button onclick="setDirection('right')">→</button>
+      <button onclick="tapMove('left')">←</button>
+      <button onclick="tapMove('down')">↓</button>
+      <button onclick="tapMove('right')">→</button>
     </div>
   </div>
   <button id="mobile-teleport" onclick="teleportPlayer()">⚡</button>
@@ -82,9 +50,22 @@
       if (audio.paused) audio.play();
     }, { once: true });
 
-    function setDirection(dir) {
-      moveDirection = dir;
-      startMoving();
+    function tapMove(direction) {
+      moveDirection = direction;
+      moveOnce();
+    }
+
+    function moveOnce() {
+      const dir = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] }[moveDirection];
+      if (!dir) return;
+      const [dx, dy] = dir;
+      const newX = player.x + dx;
+      const newY = player.y + dy;
+      if (newX >= 0 && newY >= 0 && newX < maze[0].length && newY < maze.length && maze[newY][newX] !== 1) {
+        player.x = newX;
+        player.y = newY;
+        handleTile(maze[newY][newX]);
+      }
     }
 
     document.getElementById('showControls').addEventListener('change', function () {
@@ -93,7 +74,6 @@
       document.getElementById('mobile-teleport').style.display = enabled ? 'block' : 'none';
     });
 
-    // Zeige direkt mobile Steuerung wenn aktiviert
     if (document.getElementById('showControls').checked) {
       document.getElementById('mobile-controls').style.display = 'flex';
       document.getElementById('mobile-teleport').style.display = 'block';

@@ -95,3 +95,11 @@ button:hover {
   box-shadow: 0 0 10px #ffcc00;
   z-index: 10;
 }
+
+/* Responsives Canvas auf Mobile */
+canvas {
+  width: 100vw;
+  max-width: 600px;
+  height: auto;
+  touch-action: none;
+}
