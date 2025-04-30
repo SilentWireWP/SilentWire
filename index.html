@@ -3,8 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <title>Nullborn Escape</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="stylesheet" href="style.css">
+  <style>
+    #mobile-controls {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      z-index: 10;
+    }
+    #mobile-controls button {
+      width: 50px;
+      height: 50px;
+      background: black;
+      border: 2px solid #00ff00;
+      color: #00ff00;
+      font-size: 20px;
+    }
+    #mobile-teleport {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: none;
+      width: 60px;
+      height: 60px;
+      font-size: 28px;
+      background: black;
+      color: #ffcc00;
+      border: 2px solid #ffcc00;
+      z-index: 10;
+    }
+  </style>
 </head>
 <body>
   <div id="menu">
@@ -30,6 +62,17 @@
     <div id="story"></div>
   </div>
 
+  <!-- Mobile Controls -->
+  <div id="mobile-controls">
+    <button onclick="setDirection('up')">↑</button>
+    <div>
+      <button onclick="setDirection('left')">←</button>
+      <button onclick="setDirection('down')">↓</button>
+      <button onclick="setDirection('right')">→</button>
+    </div>
+  </div>
+  <button id="mobile-teleport" onclick="teleportPlayer()">⚡</button>
+
   <audio id="bgm" src="musik.mp3" loop></audio>
 
   <script src="game.js"></script>
@@ -38,6 +81,23 @@
       const audio = document.getElementById("bgm");
       if (audio.paused) audio.play();
     }, { once: true });
+
+    function setDirection(dir) {
+      moveDirection = dir;
+      startMoving();
+    }
+
+    document.getElementById('showControls').addEventListener('change', function () {
+      const enabled = this.checked;
+      document.getElementById('mobile-controls').style.display = enabled ? 'flex' : 'none';
+      document.getElementById('mobile-teleport').style.display = enabled ? 'block' : 'none';
+    });
+
+    // Zeige direkt mobile Steuerung wenn aktiviert
+    if (document.getElementById('showControls').checked) {
+      document.getElementById('mobile-controls').style.display = 'flex';
+      document.getElementById('mobile-teleport').style.display = 'block';
+    }
   </script>
 </body>
 </html>
