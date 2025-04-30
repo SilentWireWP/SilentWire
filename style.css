@@ -1,0 +1,54 @@
+body {
+  margin: 0;
+  background: black;
+  color: #00ff00;
+  font-family: 'Courier New', monospace;
+  text-align: center;
+}
+
+#menu {
+  margin-top: 40px;
+}
+
+canvas {
+  display: block;
+  margin: 20px auto;
+  border: 2px solid #00ff00;
+  background: #000;
+  box-shadow: 0 0 20px #00ff00;
+}
+
+button {
+  background: black;
+  border: 2px solid #00ff00;
+  color: #00ff00;
+  padding: 10px 20px;
+  margin: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background: #00ff00;
+  color: black;
+}
+
+#scoreboard, #health, #emotions, #story {
+  margin: 10px 0;
+  font-size: 18px;
+}
+
+#health {
+  font-size: 22px;
+}
+
+#emotions {
+  font-size: 32px;
+}
+
+#story {
+  font-style: italic;
+  opacity: 0.7;
+  min-height: 20px;
+}
