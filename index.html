@@ -80,17 +80,20 @@
       document.getElementById('mobile-teleport').style.display = 'block';
     }
 
-    // PATCH-SYSTEM für GitHub Pages: Manuelle Liste
-    const patchFiles = [
-      "patches/update_version_and_spawnfix.js"
-      // Weitere Patches hier hinzufügen
-    ];
+    // PATCH-SYSTEM (nach Spiel-Initialisierung)
+    window.addEventListener("load", () => {
+      const patchFiles = [
+        "patches/update_version_and_spawnfix.js",
+        "patches/add_traps_patch.js",
+        "patches/example_patch.js"
+      ];
 
-    for (const file of patchFiles) {
-      const script = document.createElement("script");
-      script.src = file;
-      document.body.appendChild(script);
-    }
+      for (const file of patchFiles) {
+        const script = document.createElement("script");
+        script.src = file;
+        document.body.appendChild(script);
+      }
+    });
   </script>
 </body>
 </html>
