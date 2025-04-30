@@ -1,40 +1,35 @@
+const GameHooks = {
+  onGameStart: []
+};
 
-// === GAME CONFIG & HOOKS ===
-// (gekürzter Anfang für Übersicht)
-...
-function drawMaze() {
-  for (let y = 0; y < mapRows; y++) {
-    for (let x = 0; x < mapCols; x++) {
-      let color = "#000";
-      switch (maze[y][x]) {
-        case CELL_WALL:
-          color = GameConfig.mode === "hardcore" && score >= GameConfig.hardcoreScore ? "#330000" : "#003300";
-          break;
-        case CELL_BOOST: color = "#003366"; break;
-        case CELL_TRAP: color = "#330033"; break;
-        case CELL_TELEPORT: color = "#003300"; break;
-      }
-      ctx.fillStyle = color;
-      ctx.shadowColor = color;
-      ctx.shadowBlur = 5;
-      ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
-      ctx.shadowBlur = 0;
+let player = { x: 1, y: 1 };
+let maze = Array.from({ length: 10 }, () => Array(10).fill(0));
+let moveDirection = null;
+let score = 0;
+let nullborns = [];
 
-      // Emoji-Symbole anzeigen
-      if (maze[y][x] === CELL_TRAP) {
-        ctx.fillStyle = "#ff00ff";
-        ctx.font = `${cellSize * 0.6}px Arial`;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText("🕳️", (x + 0.5) * cellSize, (y + 0.5) * cellSize);
-      }
-      if (maze[y][x] === CELL_BOOST) {
-        ctx.fillStyle = "#00ccff";
-        ctx.font = `${cellSize * 0.6}px Arial`;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText("⚡", (x + 0.5) * cellSize, (y + 0.5) * cellSize);
-      }
-    }
-  }
+function startGame(mode) {
+  document.getElementById("menu").style.display = "none";
+  document.getElementById("gameCanvas").style.display = "block";
+  GameHooks.onGameStart.forEach(fn => fn());
+  draw();
+}
+
+function tapMove(dir) {
+  moveDirection = dir;
+}
+
+function teleportPlayer() {
+  player.x = Math.floor(Math.random() * 10);
+  player.y = Math.floor(Math.random() * 10);
+  draw();
+}
+
+function draw() {
+  const ctx = document.getElementById("gameCanvas").getContext("2d");
+  ctx.clearRect(0, 0, 600, 600);
+  ctx.fillStyle = "green";
+  ctx.beginPath();
+  ctx.arc(player.x * 60 + 30, player.y * 60 + 30, 20, 0, Math.PI * 2);
+  ctx.fill();
 }
