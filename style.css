@@ -1,105 +1,24 @@
 body {
-  margin: 0;
   background: black;
   color: #00ff00;
-  font-family: 'Courier New', monospace;
+  font-family: monospace;
   text-align: center;
 }
 
-#menu {
-  margin-top: 40px;
-}
-
-canvas {
-  display: block;
-  margin: 20px auto;
-  border: 2px solid #00ff00;
-  background: #000;
-  box-shadow: 0 0 20px #00ff00;
-}
-
 button {
-  background: black;
-  border: 2px solid #00ff00;
-  color: #00ff00;
-  padding: 10px 20px;
-  margin: 10px;
+  margin: 5px;
+  padding: 10px;
   font-size: 16px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-button:hover {
-  background: #00ff00;
-  color: black;
-}
-
-#scoreboard, #health, #emotions, #story {
-  margin: 10px 0;
-  font-size: 18px;
-}
-
-#health {
-  font-size: 22px;
-}
-
-#emotions {
-  font-size: 32px;
-}
-
-#story {
-  font-style: italic;
-  opacity: 0.7;
-  min-height: 20px;
-}
-
-/* Mobile Controls */
-#mobile-controls {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  z-index: 10;
-}
-
-#mobile-controls button {
-  width: 50px;
-  height: 50px;
   background: black;
-  border: 2px solid #00ff00;
+  border: 1px solid #00ff00;
   color: #00ff00;
-  font-size: 20px;
   border-radius: 6px;
-  box-shadow: 0 0 5px #00ff00;
 }
 
-#mobile-controls div {
-  display: flex;
-  justify-content: center;
-  gap: 5px;
-}
-
-#mobile-teleport {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 60px;
-  height: 60px;
-  font-size: 28px;
-  background: black;
-  color: #ffcc00;
-  border: 2px solid #ffcc00;
-  border-radius: 50%;
-  box-shadow: 0 0 10px #ffcc00;
-  z-index: 10;
-}
-
-/* Responsives Canvas auf Mobile */
-canvas {
-  width: 100vw;
-  max-width: 600px;
-  height: auto;
-  touch-action: none;
+#mobile-controls button, #mobile-teleport {
+  font-size: 24px;
+  border: 2px solid #00ff00;
+  background: transparent;
+  color: #00ff00;
+  margin: 5px;
 }
