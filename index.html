@@ -45,7 +45,21 @@
 
   <script src="game.js"></script>
 
+  <!-- Patch-Skripte sofort laden -->
   <script>
+    // Patch-Dateien sofort einbinden
+    const patchFiles = [
+      "patches/update_version_and_spawnfix.js",  // Patch-Datei
+      "patches/add_traps_patch.js",              // Beispiel-Patch für Fallen
+      "patches/example_patch.js"                 // Beispiel-Patch
+    ];
+
+    patchFiles.forEach(file => {
+      const script = document.createElement("script");
+      script.src = file;
+      document.body.appendChild(script);
+    });
+
     window.addEventListener('click', () => {
       const audio = document.getElementById("bgm");
       if (audio.paused) audio.play();
@@ -79,21 +93,6 @@
       document.getElementById('mobile-controls').style.display = 'flex';
       document.getElementById('mobile-teleport').style.display = 'block';
     }
-
-    // PATCH-SYSTEM (nach Spiel-Initialisierung)
-    window.addEventListener("load", () => {
-      const patchFiles = [
-        "patches/update_version_and_spawnfix.js",
-        "patches/add_traps_patch.js",
-        "patches/example_patch.js"
-      ];
-
-      for (const file of patchFiles) {
-        const script = document.createElement("script");
-        script.src = file;
-        document.body.appendChild(script);
-      }
-    });
   </script>
 </body>
 </html>
