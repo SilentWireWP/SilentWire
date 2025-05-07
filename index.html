@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="de"> <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Silent Wire: Summer's End</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css"> </head>
+<body>
+    <div id="landing-page">
+        <div class="background-overlay"></div>
+        <div class="portal-light-container">
+            <div class="portal-light"></div>
+        </div>
+        <div class="kids-silhouettes">
+            </div>
+
+        <div class="text-content">
+            <p class="quote flicker-text" data-key="landingQuote">“Something was left open... and it’s still calling.”</p>
+            <h1 class="main-title" data-key="mainTitle">PROJECT SILENT WIRE</h1>
+            <h2 class="sub-title" data-key="subTitle">SUMMER’S END</h2>
+            <p class="author-novel" data-key="authorNovel">(A novel by W.D. Perske)</p>
+        </div>
+
+        <button id="enter-button" data-key="enterButton">[ ENTER FALCON HOLLOW ]</button>
+    </div>
+
+    <div class="content-wrapper"> <nav id="main-menu">
+            <ul>
+                <li><a href="#" id="home-button" data-key="menuHome">Home</a></li>
+                <li><a href="#story-section" data-section="story-section" data-key="menuStory">Die Story</a></li>
+                <li><a href="#characters-section" data-section="characters-section" data-key="menuCharacters">Die Charaktere</a></li>
+                <li><a href="#creatures-section" data-section="creatures-section" data-key="menuCreatures">Kreaturen & Entitäten</a></li>
+                <li><a href="#places-section" data-section="places-section" data-key="menuPlaces">Orte & Schauplätze</a></li>
+                <li><a href="#author-section" data-section="author-section" data-key="menuAuthor">Über den Autor</a></li>
+            </ul>
+            <div class="lang-switcher">
+                <button data-lang="de" class="lang-button active-lang">DE</button>
+                <span class="lang-separator">|</span>
+                <button data-lang="en" class="lang-button">EN</button>
+            </div>
+        </nav>
+
+        <div id="story-section" class="content-section">
+            <h2 data-key="sectionTitleStory">Die Story</h2>
+            <div class="grid-container single-column-text">
+                <div class="grid-item">
+                    <p data-key="storyP1">Der Sommer in der verschlafenen Kleinstadt Falcon Hollow beginnt wie jeder andere – doch unter der idyllischen Oberfläche brodeln längst vergessene Geheimnisse. Als Aiden Blake und seine Freunde Zeugen unerklärlicher Phänomene werden – ein tiefes, beunruhigendes Brummen aus den umliegenden Wäldern und seltsame Vorkommnisse im berüchtigten Carmichael-Haus, in das gerade die neue Mitschülerin Elaine Carter eingezogen ist – verwandelt sich die ersehnte Ferienzeit in ein packendes Mysterium.</p>
+                    <p data-key="storyP2">Auf der Suche nach Antworten stoßen die Jugendlichen auf die rätselhaften Aufzeichnungen des exzentrischen Wissenschaftlers Dr. Alistair Thorne, der vor Jahrzehnten spurlos verschwand. Seine Notizen enthüllen Hinweise auf das unheilvolle 'Project Silent Wire', ein geheimes Forschungsprojekt, das eine Verbindung zu den elektromagnetischen Anomalien und einer unheimlichen Präsenz im Wald zu haben scheint. Was als kindliches Abenteuer beginnt, wird bald zu einem Wettlauf gegen eine unbekannte Bedrohung, die nicht nur ihr Leben, sondern das von ganz Falcon Hollow zu gefährden droht.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="characters-section" class="content-section">
+            <h2 data-key="sectionTitleCharacters">Die Charaktere</h2>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <img src="images/aiden.png" alt="Porträt von Aiden Blake" class="character-image" data-key="altAiden">
+                    <h3 data-key="charAidenName">Aiden Blake</h3>
+                    <p data-key="charAidenDesc">Ein introvertierter Highschool-Schüler aus Falcon Hollow und der Protagonist der Geschichte. Er beobachtet seine Umgebung aufmerksam und ist eher zurückhaltend. Aiden ist Teil der Kernclique, die den mysteriösen Ereignissen nachgeht. Er lebt mit seiner Familie in Falcon Hollow; sein Vater ist Lokalhistoriker/Autor und seine ältere Schwester Milana sorgt sich um ihn. Mit seinen Freunden untersucht Aiden unheimliche Vorkommnisse im Wald und lüftet nach und nach das Geheimnis um Project Silent Wire.</p>
+                </div>
+                <div class="grid-item">
+                    <img src="images/elaine.png" alt="Porträt von Elaine Carter" class="character-image" data-key="altElaine">
+                    <h3 data-key="charElaineName">Elaine Carter</h3>
+                    <p data-key="charElaineDesc">Neu in Falcon Hollow und in Aidens Alter. Sie zieht mit ihren Eltern in das berüchtigte Carmichael-Haus neben Aiden. Elaine ist neugierig, mutig und wissbegierig; sie freundet sich schnell mit Aiden an. Als Tochter eines Sheriff und einer Geologin bringt sie besonderen Wissensdrang mit. Elaine entdeckt in ihrem neuen Haus die versteckten Notizbücher von Dr. Thorne und trägt so entscheidend zur Aufklärung des Rätsels bei. Sie wird Teil von Aidens Freundeskreis und teilt dessen Abenteuer im Wald.</p>
+                </div>
+                <div class="grid-item">
+                    <img src="images/jayden.png" alt="Porträt von Jayden Marsh" class="character-image" data-key="altJayden">
+                    <h3 data-key="charJaydenName">Jayden Marsh</h3>
+                    <p data-key="charJaydenDesc">Ein enger Freund von Aiden seit Kindertagen (Sandkastenfreund). Jayden ist technisch versiert und begeisterter Tüftler. Er baut Geräte, z.B. einen verbesserten EMF-Detektor und andere Werkzeuge, um den übernatürlichen Phänomenen auf die Spur zu kommen. Im Verlauf der Handlung erweist sich Jayden als pragmatisch und vorsichtig, aber zugleich erfinderisch – seine technischen Fähigkeiten helfen der Gruppe, die seltsamen elektromagnetischen Signale im Wald zu messen und sich gegen das Unbekannte zu wappnen.</p>
+                </div>
+                <div class="grid-item">
+                    <img src="images/abel.png" alt="Porträt von Abel Garcia" class="character-image" data-key="altAbel">
+                    <h3 data-key="charAbelName">Abel Garcia</h3>
+                    <p data-key="charAbelDesc">Ebenfalls Teil von Aidens Freundesgruppe. Abel ist seit frühester Kindheit mit Aiden befreundet und hat eine lebhafte, impulsive Art. Er fungiert als „die Ohren der Gruppe“ und sammelt Gerüchte und lokale Geschichten über die unheimlichen Geschehnisse. Obwohl er manchmal unbedacht ist, ist Abel loyal und mutig. Er stammt aus einer Familie mit mexikanisch-amerikanischen Wurzeln in Falcon Hollow und bringt die anderen auf die Idee, alten Legenden nachzugehen. Abels Mut wird auf die Probe gestellt, als die Freunde tatsächlich auf eine bedrohliche Entität im Wald stoßen.</p>
+                </div>
+                <div class="grid-item">
+                    <img src="images/milana.png" alt="Porträt von Milana Blake" class="character-image" data-key="altMilana">
+                    <h3 data-key="charMilanaName">Milana Blake</h3>
+                    <p data-key="charMilanaDesc">Aidens ältere Schwester. Sie ist fürsorglich und verantwortungsbewusst. Milana wirkt in der Regel gefasst, übernimmt zu Hause eine Beschützerrolle für Aiden und bemerkt schnell, wenn etwas nicht stimmt. Als Aiden und seine Freunde eines Tages nicht vom Wald zurückkehren, gerät sie in Sorge und sucht zusammen mit Rafael nach ihnen. Milana spielt eine wichtige Rolle gegen Ende des Buches, als sie zusammen mit Rafael in die Ereignisse hineingezogen wird. Ihre Unterstützung und Entschlossenheit helfen, die jüngeren Geschwister aus brenzligen Situationen zu retten.</p>
+                </div>
+                <div class="grid-item">
+                    <img src="images/rafael.png" alt="Porträt von Rafael Garcia" class="character-image" data-key="altRafael">
+                    <h3 data-key="charRafaelName">Rafael Garcia</h3>
+                    <p data-key="charRafaelDesc">Abels großer Bruder (19 Jahre alt). Nach dem mysteriösen Verschwinden ihres Vaters vor Jahren fühlt Rafael sich für Abel und ihre Mutter verantwortlich und arbeitet in einer Werkstatt, um die Familie zu unterstützen. Anfangs hält er sich aus den „Spinnereien“ der Jüngeren heraus, doch als Abel und die anderen in Gefahr geraten, zögert Rafael nicht, zu helfen. Er und Milana machen sich gemeinsam auf die Suche nach der verschwundenen Gruppe. Rafael wird im Finale verletzt – der Angriff einer unbekannten Kreatur hinterlässt bei ihm eine Wunde (die titelgebende “Rafael’s Scar” in einem Kapitel), was andeutet, dass er von etwas Unheimlichem infiziert oder beeinflusst wurde. Seine Figur wächst vom skeptischen großen Bruder zu einem wichtigen Mitstreiter im Kampf gegen das Unbekannte.</p>
+                </div>
+                <div class="grid-item">
+                    <img src="images/drthorne.png" alt="Porträt von Dr. Alistair Thorne" class="character-image" data-key="altDrThorne">
+                    <h3 data-key="charDrThorneName">Dr. Alistair Thorne</h3>
+                    <p data-key="charDrThorneDesc">Ein exzentrischer Wissenschaftler und früherer Bewohner von Falcon Hollow, dessen Schatten über dem gesamten Geschehen liegt. Dr. Thorne ist zwar nicht persönlich anwesend, spielt aber durch seine Hinterlassenschaften eine zentrale Rolle: Er forschte in den 1960er Jahren an dem geheimen Project Silent Wire und verschwand plötzlich unter ungeklärten Umständen. Elaine findet Thornes versteckte Notizbücher auf dem Dachboden des Carmichael-Hauses, in denen rätselhafte Symbole, technische Diagramme und Aufzeichnungen über seltsame Signale festgehalten sind. Diese Tagebücher liefern der Gruppe entscheidende Hinweise und offenbaren, dass Thorne etwas Gefährlichem auf der Spur war.</p>
+                </div>
+                <div class="grid-item">
+                    <img src="images/sheriffcarter.png" alt="Porträt von Sheriff Carter" class="character-image" data-key="altSheriffCarter">
+                    <h3 data-key="charSheriffCarterName">Sheriff Carter</h3>
+                    <p data-key="charSheriffCarterDesc">Elaines Vater und seit Kurzem der neue Sheriff von Falcon Hollow. Sein Vorname wird im Buch nicht genannt. Er ist ein pflichtbewusster Gesetzeshüter. Während eines kleineren Waldbrandes nördlich der Stadt ist er im Einsatz, und im Finale greift er ein, nachdem die Jugendlichen die unheimlichen Ereignisse melden. Er nimmt die Hinweise der Jugendlichen zunächst zögerlich ernst, kommt aber schließlich zu Hilfe. Seine Präsenz repräsentiert die Erwachsenenwelt, die langsam erkennt, dass mehr hinter den „Spukgeschichten“ steckt.</p>
+                </div>
+                <div class="grid-item">
+                    <img src="images/margaretcarter.png" alt="Porträt von Margaret Carter" class="character-image" data-key="altMargaretCarter">
+                    <h3 data-key="charMargaretCarterName">Margaret Carter</h3>
+                    <p data-key="charMargaretCarterDesc">Elaines Mutter. Sie ist promovierte Geologin und führt im Buch eigenständige Untersuchungen durch. Margaret zeigt auffällig großes Interesse am Boden und an geologischen Besonderheiten des Carmichael-Grundstücks. Sie scheint zu ahnen, dass es in Falcon Hollow ungewöhnliche geophysikalische Anomalien gibt. Im Finale unterstützen Margarets Erkenntnisse indirekt das Verständnis der Ereignisse.</p>
+                </div>
+                <div class="grid-item">
+                    <img src="images/williamblake.png" alt="Porträt von William Blake" class="character-image" data-key="altWilliamBlake">
+                    <h3 data-key="charWilliamBlakeName">William Blake</h3>
+                    <p data-key="charWilliamBlakeDesc">Aidens Vater. William ist ein Autor und Lokalhistoriker, der sich auf die unheimliche Geschichte von Falcon Hollow spezialisiert hat. Er schreibt Mystery-Kolumnen und Bücher über lokale Legenden. Aiden durchsucht heimlich die Archive seines Vaters nach Hinweisen zu Project Silent Wire. Seine Kenntnisse helfen den Jugendlichen, Gerüchte einzuordnen.</p>
+                </div>
+                <div class="grid-item">
+                    <img src="images/winonablake.png" alt="Porträt von Winona Blake" class="character-image" data-key="altWinonaBlake">
+                    <h3 data-key="charWinonaBlakeName">Winona Blake</h3>
+                    <p data-key="charWinonaBlakeDesc">Aidens Mutter. Winona ist die pragmatische Stütze der Familie Blake. Sie arbeitet im örtlichen Gemischtwarenladen (Miller’s Mercantile). Sie verkörpert Bodenständigkeit inmitten der unheimlichen Ereignisse. Obwohl Winona nichts von den paranormalen Erlebnissen ihres Sohnes ahnt, sorgt ihre Präsenz für einen sicheren Hafen.</p>
+                </div>
+                <div class="grid-item">
+                    <img src="images/rosagarcia.png" alt="Porträt von Rosa Garcia" class="character-image" data-key="altRosaGarcia">
+                    <h3 data-key="charRosaGarciaName">Rosa Garcia</h3>
+                    <p data-key="charRosaGarciaDesc">Die Mutter von Rafael und Abel. Rosa wird nur kurz erwähnt, hinterlässt aber einen bleibenden Eindruck als warmherzige, tapfere Frau. Seit dem Verschwinden ihres Mannes muss Rosa allein für die Familie sorgen. Sie behandelt auch die Freunde ihrer Söhne wie eigene Kinder. Rosa steht sinnbildlich für den familiären Rückhalt.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="creatures-section" class="content-section">
+            <h2 data-key="sectionTitleCreatures">Kreaturen & Entitäten</h2>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <h3 data-key="creaturePSWName">Project Silent Wire (PSW)</h3>
+                    <p data-key="creaturePSWDesc">Ein streng geheimes Projekt, das Dr. Thorne in den 1960er Jahren betrieben hat. Der Projektname taucht im Roman als Gerücht und später als Realität auf. In Falcon Hollow kursieren Verschwörungstheorien, dass „in den abgelegenen Wäldern um Falcon Hollow“ damals Experimente mit extrem niederfrequenten Radiowellen oder Schlimmerem durchgeführt wurden. Im Verlauf der Geschichte wird klar, dass das Projekt real war und direkt mit den mysteriösen Ereignissen zusammenhängt. Die Notizbücher im Carmichael-Haus enthüllen, dass PSW ungewöhnliche elektromagnetische Signale detektierte und vielleicht sogar ein Portal zu einer anderen Dimension öffnete. Project Silent Wire ist der zentrale Mythos, der zur greifbaren Bedrohung wird.</p>
+                </div>
+                <div class="grid-item">
+                    <h3 data-key="creatureNamelessName">Die namenlose Kreatur im Wald</h3>
+                    <p data-key="creatureNamelessDesc">Aiden und seine Freunde begegnen einem unheimlichen Wesen, das nie einen offiziellen Namen erhält, jedoch den Antagonisten darstellt. Es wird meist als „das Monster“ oder „das Ding“ beschrieben. Diese Kreatur greift die Jugendlichen in einem alten Schulbus (dem „Rusty Bucket“) an und verletzt Rafael schwer. Sie scheint von den Experimenten des Project Silent Wire angelockt oder erschaffen worden zu sein. Charakteristisch sind ihre unbekannte Gestalt und bedrohliche Aura – Augen leuchten im Dunkeln des Waldes, und sie verursacht jenes tiefe Brummen, das die Stadt erschüttert. Obwohl dieses Wesen keinen Eigennamen trägt, ist es die zentrale übernatürliche Bedrohung der Geschichte.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="places-section" class="content-section">
+            <h2 data-key="sectionTitlePlaces">Orte & Schauplätze</h2>
+            <div class="grid-container">
+                 <div class="grid-item">
+                    <h3 data-key="placeFalconHollowName">Falcon Hollow</h3>
+                    <p data-key="placeFalconHollowDesc">Die fiktive Kleinstadt in Oregon, USA, in der die Handlung spielt. Falcon Hollow wird als verschlafenes Städtchen beschrieben, das auf den ersten Blick idyllisch wirkt. Doch hinter der Fassade kriselt es: Arbeitslosigkeit, verlassene Läden und das Gefühl, ein „vergessener Außenposten“ zu sein. Falcon Hollow selbst wird zum Charakter: Je weiter die Jugendlichen in die Geheimnisse eindringen, desto deutlicher spürt man, dass etwas Unheimliches an diesem scheinbar ruhigen Ort lauert.</p>
+                </div>
+                <div class="grid-item">
+                    <h3 data-key="placeFalconHollowHSName">Falcon Hollow High School</h3>
+                    <p data-key="placeFalconHollowHSDesc">Die örtliche Highschool, die Aiden, Elaine (später) und ihre Freunde besuchen. Sie bildet die Kulisse der Anfangskapitel. Das Schulgebäude ist ein typischer 90er-Jahre-Schulkomplex. Die Schule steht für Normalität und Alltag im Leben der Teenager, der durch die mysteriösen Ereignisse bedroht wird.</p>
+                </div>
+                <div class="grid-item">
+                    <h3 data-key="placeCarmichaelHouseName">Carmichael-Haus</h3>
+                    <p data-key="placeCarmichaelHouseDesc">Ein altes, großes Herrenhaus in der Maple Street, Falcon Hollow, das jahrzehntelang leerstand und einen Ruf als Spukhaus hat. Elaine Carters Familie zieht hier ein. Auf dem Dachboden findet Elaine Dr. Thornes versteckte Notizbücher. Das Haus ist einer der zentralen Schauplätze und Ausgangspunkt der Mystery-Handlung.</p>
+                </div>
+                <div class="grid-item">
+                    <h3 data-key="placeMapleStreetName">Maple Street</h3>
+                    <p data-key="placeMapleStreetDesc">Die Straße, in der Aiden wohnt und in der auch das Carmichael-Haus steht. Eine typische Wohnstraße mit alten Häusern. Die Lage am Waldrand macht sie zum direkten Übergang in das unbekannte Gelände.</p>
+                </div>
+                <div class="grid-item">
+                    <h3 data-key="placeMillersMercName">Miller’s Mercantile</h3>
+                    <p data-key="placeMillersMercDesc">Der Gemischtwarenladen an der Hauptstraße von Falcon Hollow. Ein sozialer Treffpunkt. Aidens Mutter Winona arbeitet hier. Der Laden verankert die Geschichte in einem realistischen Ort und symbolisiert Normalität.</p>
+                </div>
+                <div class="grid-item">
+                    <h3 data-key="placeRustyBucketName">“Rusty Bucket”</h3>
+                    <p data-key="placeRustyBucketDesc">Der Spitzname eines ausrangierten alten Schulbusses am Waldrand, der als geheimer Treffpunkt der Freunde dient. Hier schmieden sie Pläne und lagern Ausrüstung. Später kommt es hier zu einem dramatischen Angriff des Monsters.</p>
+                </div>
+                <div class="grid-item">
+                    <h3 data-key="placeWhisperingFallsName">Whispering Falls</h3>
+                    <p data-key="placeWhisperingFallsDesc">Der Name eines abgelegenen Naturplatzes (Wasserfall oder Schlucht), den Rafael erwähnt. Dient als Andeutung weiterer Geheimnisse und als Foreshadowing für spätere Ereignisse.</p>
+                </div>
+                <div class="grid-item">
+                    <h3 data-key="placeSectorGammaName">Sektor Gamma</h3>
+                    <p data-key="placeSectorGammaDesc">Ein geheimes Areal im Wald, das Dr. Thorne in seinen Aufzeichnungen markiert hat. Die Freunde übernehmen es als Codenamen für den Ort mit ungewöhnlichen Messwerten. Hier kommt es zur Begegnung mit dem Wesen. Sektor Gamma steht für das Herz des Mysteriums.</p>
+                </div>
+                <div class="grid-item">
+                    <h3 data-key="placeSurroundingForestName">Der umliegende Wald</h3>
+                    <p data-key="placeSurroundingForestDesc">Die dichten Wälder rund um Falcon Hollow bilden die Bühne für viele Schlüsselereignisse. Der Wald wird als urwüchsig und stellenweise unheimlich beschrieben. Er fungiert als Grenzort zwischen Zivilisation und der Wildnis, in der Project Silent Wire stattfand. Hier geschehen unerklärliche Phänomene.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="author-section" class="content-section">
+            <h2 data-key="sectionTitleAuthor">Über W.D. Perske</h2>
+            <div class="grid-container single-column-text">
+                <div class="grid-item">
+                    <p data-key="authorP1">Ich bin 1997 geboren, lebe in Deutschland und schreibe Geschichten, die irgendwo zwischen Realität und Fantasie spielen. Schon früh haben mich die Welten von Harry Potter, Der Herr der Ringe und anderen großen Fantasy-Erzählungen geprägt – später kamen Serien wie Stranger Things dazu, die mir gezeigt haben, wie spannend es sein kann, das Unheimliche in ganz normalen Orten zu entdecken.</p>
+                    <p data-key="authorP2">Mit Project Silent Wire erfülle ich mir einen lang gehegten Traum. Die Idee dazu begleitet mich schon viele Jahre – geboren aus Erinnerungen an meine Kindheit, inspiriert von dunklen Gängen, Sommernächten und dem Gefühl, dass hinter dem Bekannten noch etwas anderes wartet.</p>
+                    <p data-key="authorP3">Ich schreibe unter dem Pseudonym W.D. Perske, weil ich finde, dass Geschichten im Mittelpunkt stehen sollten – nicht der Autor dahinter. Mein Ziel ist es, Welten zu erschaffen, in die man eintauchen kann. Die bleiben. Die das Staunen wieder wachrufen.</p>
+                </div>
+            </div>
+        </div>
+
+    </div> <footer>
+        <p data-key="footerMotto">© 2025 W.D. Perske | Don’t follow the frequency.</p>
+    </footer>
+
+    <script src="script.js"></script> </body>
+</html>

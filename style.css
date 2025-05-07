@@ -1,0 +1,419 @@
+/* Globale Stile und Farbpalette */
+:root {
+    --deep-red: #6D0000;
+    --off-black: #080808;
+    --content-bg: #0D0D0D;
+    --dark-green: #011C0A;
+    --cool-blue: #2E5A8C;
+    --gold-nuance: #B08D57; /* Unser Braun-/Goldton */
+    --text-color: #EAEAEA;
+    --text-color-darker: #b0b0b0;
+    --title-font: 'Merriweather', serif;
+    --text-font: 'Roboto', sans-serif;
+}
+
+/* Sticky Footer Setup & Grundlegendes Body Styling */
+html {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    background-color: var(--off-black);
+    color: var(--text-color);
+    font-family: var(--text-font);
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-wrapper {
+    flex-grow: 1;
+    /* padding-top für das fixe Menü wird per JavaScript hinzugefügt */
+}
+
+/* --- Landing Page --- */
+#landing-page {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    background-image: url('https://images.unsplash.com/photo-1448375240586-882707db888b?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMzI1MXwwfDF8cmFuZG9tfHx8fHx8fHx8MTcxNDk3NzY3NHw&ixlib=rb-4.0.3&q=85'); /* Beispielbild, ersetzen! */
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    transition: opacity 0.5s ease-out, visibility 0s linear 0.5s;
+}
+
+#landing-page.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    height: 0; 
+    overflow: hidden; 
+}
+
+.background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.portal-light-container {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+.portal-light {
+    width: 80px;
+    height: 80px;
+    background-color: rgba(46, 90, 140, 0.5);
+    border-radius: 50%;
+    box-shadow: 0 0 20px 10px rgba(46, 90, 140, 0.7),
+                0 0 40px 20px rgba(46, 90, 140, 0.4),
+                0 0 70px 40px rgba(46, 90, 140, 0.2);
+    animation: pulse 4s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 20px 10px rgba(46, 90, 140, 0.6), 0 0 40px 20px rgba(46, 90, 140, 0.3), 0 0 70px 40px rgba(46, 90, 140, 0.1); }
+    50% { transform: scale(1.05); box-shadow: 0 0 30px 15px rgba(46, 90, 140, 0.8), 0 0 50px 25px rgba(46, 90, 140, 0.5), 0 0 80px 50px rgba(46, 90, 140, 0.3); }
+    100% { transform: scale(0.95); box-shadow: 0 0 20px 10px rgba(46, 90, 140, 0.6), 0 0 40px 20px rgba(46, 90, 140, 0.3), 0 0 70px 40px rgba(46, 90, 140, 0.1); }
+}
+
+.kids-silhouettes {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 150px;
+    z-index: 2;
+    /* background-image: url('pfad/zu/deinen/silhouetten.png'); */
+}
+
+.text-content {
+    position: relative;
+    z-index: 3;
+    padding: 20px;
+}
+
+.quote {
+    font-family: var(--text-font);
+    font-weight: 300;
+    font-size: 1.3em;
+    color: var(--text-color);
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 5px rgba(234, 234, 234, 0.3);
+}
+
+.flicker-text {
+    animation: flicker 3s infinite alternate;
+}
+
+@keyframes flicker {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% {
+        text-shadow:
+            0 0 4px var(--text-color),
+            0 0 10px var(--text-color),
+            0 0 18px var(--cool-blue),
+            0 0 38px var(--cool-blue),
+            0 0 70px var(--cool-blue);
+        opacity: 1;
+    }
+    20%, 24%, 55% {
+        text-shadow: none;
+        opacity: 0.8;
+    }
+}
+
+.main-title {
+    font-family: var(--title-font);
+    font-weight: 900;
+    font-size: 3.5em;
+    color: var(--deep-red); 
+    margin: 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 0px var(--off-black), 0 0 15px var(--deep-red);
+}
+
+.sub-title {
+    font-family: var(--title-font);
+    font-weight: 700;
+    font-size: 2.5em;
+    color: var(--text-color);
+    margin: 0 0 20px 0;
+    letter-spacing: 1.5px;
+    text-shadow: 1px 1px 0px var(--off-black);
+}
+
+.author-novel {
+    font-family: var(--text-font);
+    font-weight: 300;
+    font-size: 1em;
+    color: #ccc;
+}
+
+#enter-button {
+    font-family: var(--text-font);
+    font-size: 1.2em;
+    font-weight: 400;
+    color: var(--text-color);
+    background-color: transparent;
+    border: 2px solid var(--gold-nuance);
+    padding: 15px 30px;
+    margin-top: 40px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 3;
+    box-shadow: 0 0 0px 0px var(--gold-nuance);
+}
+
+#enter-button:hover {
+    background-color: rgba(176, 141, 87, 0.1);
+    color: var(--gold-nuance);
+    box-shadow: 0 0 15px 5px rgba(176, 141, 87, 0.7), inset 0 0 5px 0px rgba(176, 141, 87, 0.5);
+    text-shadow: 0 0 5px var(--gold-nuance);
+}
+
+/* --- Hauptmenü --- */
+#main-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px 0;
+    background-color: rgba(10, 10, 10, 0.95);
+    z-index: 100;
+    text-align: center;
+    display: none; 
+    box-shadow: 0px 2px 10px rgba(0,0,0,0.5);
+}
+
+#main-menu.visible {
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#main-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#main-menu ul li {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+#main-menu ul li a {
+    font-family: var(--title-font);
+    font-size: 1.1em;
+    color: var(--text-color);
+    text-decoration: none;
+    padding: 8px 12px;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+    position: relative;
+}
+
+#main-menu ul li a:hover,
+#main-menu ul li a.active {
+    color: var(--gold-nuance); 
+    text-shadow: 0 0 8px var(--gold-nuance); 
+}
+
+/* Sprachumschalter Stile */
+.lang-switcher {
+    margin-left: 25px;
+    display: flex;
+    align-items: center;
+}
+
+.lang-button {
+    background-color: transparent;
+    color: var(--text-color-darker);
+    border: 1px solid transparent;
+    padding: 5px 8px;
+    cursor: pointer;
+    font-family: var(--text-font);
+    font-size: 0.9em;
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.lang-button:hover {
+    color: var(--text-color);
+    border-color: var(--gold-nuance);
+}
+
+.lang-button.active-lang {
+    color: var(--gold-nuance);
+    font-weight: bold;
+    border-color: var(--gold-nuance);
+    box-shadow: 0 0 5px rgba(176, 141, 87, 0.5);
+}
+
+.lang-separator {
+    color: var(--text-color-darker);
+    margin: 0 5px;
+    font-size: 0.9em;
+}
+
+
+/* --- Inhaltsbereiche (Story, Characters, etc.) --- */
+.content-section {
+    display: none;
+    padding-right: 20px;
+    padding-bottom: 40px;
+    padding-left: 20px;
+    background-color: var(--content-bg);
+    min-height: calc(100vh - 120px);
+    color: var(--text-color-darker);
+}
+
+.content-section.visible {
+    display: block;
+}
+
+.content-section h2 {
+    font-family: var(--title-font);
+    color: var(--gold-nuance); 
+    text-align: center;
+    font-size: 2.5em;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.grid-item {
+    background-color: var(--off-black);
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid #222;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    display: flex; 
+    flex-direction: column; 
+}
+
+.character-image {
+    width: 100%; 
+    aspect-ratio: 2/3; /* Seitenverhältnis (Breite zu Höhe). 2/3 ist ein Hochformat. */
+                       /* Teste auch andere Werte wie 3/4 oder 1/1 (quadratisch) */
+    object-fit: cover; 
+    object-position: center bottom; /* Priorisiert den unteren Teil des Bildes, wenn beschnitten wird */
+    border-radius: 3px; 
+    margin-bottom: 15px; 
+    border: 1px solid #444; 
+    display: block; 
+    background-color: #222; /* Hintergrund für den Fall, dass Bilder nicht laden oder Transparenz haben */
+}
+
+
+.grid-item h3 {
+    font-family: var(--title-font);
+    color: var(--gold-nuance);
+    font-size: 1.5em;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.grid-item p {
+    font-size: 0.95em;
+    line-height: 1.6;
+    text-align: justify;
+    flex-grow: 1; 
+}
+
+.grid-container.single-column-text {
+    grid-template-columns: 1fr;
+}
+
+.grid-container.single-column-text .grid-item {
+    max-width: 750px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+.grid-container.single-column-text .grid-item p {
+    text-align: left;
+}
+
+
+/* --- Footer --- */
+footer {
+    width: 100%;
+    padding: 15px 0;
+    text-align: center;
+    font-size: 0.8em;
+    background-color: var(--off-black);
+    color: #aaa;
+    z-index: 50;
+    border-top: 1px solid #222;
+}
+
+
+/* Responsive Anpassungen */
+@media (max-width: 992px) {
+    #main-menu.visible { 
+        flex-direction: column;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+    #main-menu ul li {
+        display: block;
+        margin: 10px 0;
+    }
+    #main-menu ul li a {
+        font-size: 1.3em;
+        padding: 10px 15px;
+    }
+    .lang-switcher {
+        margin-left: 0;
+        margin-top: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-title { font-size: 2.5em; }
+    .sub-title { font-size: 1.8em; }
+    .quote { font-size: 1.1em; }
+    #enter-button { font-size: 1em; padding: 12px 25px; }
+    .portal-light { width: 60px; height: 60px; }
+    
+    .character-image {
+         aspect-ratio: 3/4; /* Auf Mobilgeräten eventuell ein etwas anderes Hochformat, falls gewünscht */
+    }
+
+    .content-section h2 { font-size: 2em; }
+    .grid-item h3 { font-size: 1.3em; }
+    .grid-container.single-column-text .grid-item {
+        max-width: 90%;
+    }
+}
